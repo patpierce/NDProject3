@@ -11,7 +11,7 @@
 
         <ImageView
             android:id="@+id/iv_recipe_detail_image"
-            android:src="@drawable/ic_small_oven"
+            android:src="@drawable/vg_small_oven"
             android:layout_width="@dimen/photo_width"
             android:layout_height="@dimen/photo_height"
             android:layout_marginStart="8dp"

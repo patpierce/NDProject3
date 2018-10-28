@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 //import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -36,6 +37,7 @@ public class RecipeDetailActivity
 
     private ArrayList<Recipe> recipe;
     String recipeName;
+    private boolean mTwoPane;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +48,22 @@ public class RecipeDetailActivity
         TextView mDetailServingsView = findViewById(R.id.tv_detail_num_servings);
         ImageView mDetailImageView = findViewById(R.id.iv_recipe_detail_image);
         Context context = mDetailImageView.getContext();
+
+        // Determine if you're creating a two-pane or single-pane display
+        if(findViewById(R.id.divider1) != null) {
+            // This divider1 will only initially exist in the two-pane case
+            mTwoPane = true;
+            if (savedInstanceState == null) {
+
+                StepDetailFragment stepDetailFragment = new StepDetailFragment();
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                // Add the fragment to its container using a transaction
+                fragmentManager.beginTransaction()
+                        .add(R.id.step_detail_container, stepDetailFragment)
+                        .commit();
+
+            }
+        }
 
         if (savedInstanceState == null) {
             final Integer mRecipeId;
@@ -74,7 +92,7 @@ public class RecipeDetailActivity
                     Log.d(TAG, "onCreate: mRecipeName " + mRecipeName);
 
                     // Display the recipe info into various views
-                    Glide.with(context).load(mImage).placeholder(R.drawable.ic_small_oven).into(mDetailImageView);
+                    Glide.with(context).load(mImage).placeholder(R.drawable.vg_small_oven).into(mDetailImageView);
                     mDetailRecipeNameView.setText(mRecipeName);
                     mDetailServingsView.setText(numServings);
 
@@ -102,15 +120,45 @@ public class RecipeDetailActivity
     }
 
     @Override
-    public void onListItemClick(Step clickedItemIndex) {
-        Bundle specificStepBundle = new Bundle();
+    public void onListItemClick(Step currentStep, int clickedItemIndex) {
         ArrayList<Step> selectedStep = new ArrayList<>();
-        selectedStep.add(clickedItemIndex);
-        specificStepBundle.putParcelableArrayList("Selected_Step",selectedStep);
+        selectedStep.add(currentStep);
+        Log.d(TAG, "onListItemClick: selectedStep.size " + selectedStep.size());
 
-        final Intent intent = new Intent(this, StepDetailActivity.class);
-        intent.putExtras(specificStepBundle);
+        Bundle specificStepBundle = new Bundle();
+        specificStepBundle.putParcelableArrayList("Selected_Step", selectedStep);
+//        stepBundle.putParcelableArrayList(SELECTED_STEPS,(ArrayList<Step>) stepsOut);
+        specificStepBundle.putInt("Step_Index",clickedItemIndex);
+        specificStepBundle.putString("Title",recipeName);
+//        fragment.setArguments(stepBundle);
+
+        Intent intent = new Intent(this, StepDetailActivity.class);
+        intent.putExtra("Step_Bundle", specificStepBundle);
+        intent.putExtra("Current_Recipe", recipe.get(0).getName());
         startActivity(intent);
+
+        ////                if (mTwoPane) {
+////                    Bundle arguments = new Bundle();
+////                    arguments.putString(StepDetailFragment.ARG_ITEM_ID, item.id);
+////                    StepDetailFragment fragment = new StepDetailFragment();
+////                    fragment.setArguments(arguments);
+////                    mParentActivity.getSupportFragmentManager().beginTransaction()
+////                            .replace(R.id.item_detail_container, fragment)
+////                            .commit();
+////                } else {
+//            Context context = v.getContext();
+//            Intent intent = new Intent(context, StepDetailActivity.class);
+////                intent.putExtra(StepDetailFragment.ARG_ITEM_ID, recipeId);
+//            intent.putExtra("RecipeStepEntry",
+//                    new RecipeStepEntry(
+//                            stepId,
+//                            shortDescription,
+//                            description,
+//                            videoUrl,
+//                            thumbnailUrl));
+//            context.startActivity(intent);
+
+
     }
 
 }

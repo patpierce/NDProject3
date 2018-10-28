@@ -32,7 +32,7 @@ android:background="@android:drawable/editbox_background" >
 
 <ImageView
     android:id="@+id/iv_recipe_image"
-    android:src="@drawable/ic_kitchen"
+    android:src="@drawable/vg_kitchen"
     android:layout_width="0dp"
     android:layout_height="match_parent"
     android:layout_margin="16dp"

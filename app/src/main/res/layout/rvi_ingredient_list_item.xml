@@ -12,7 +12,7 @@
         android:text="17"
         android:gravity="end"
         android:textAlignment="textEnd"
-        android:padding="4dp"
+        android:padding="2dp"
         android:textSize="14sp"
         tools:text="42" />
 
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:text="bottles"
         android:gravity="center_vertical"
-        android:padding="4dp"
+        android:padding="2dp"
         android:textSize="14sp"
         tools:text="tons" />
 
@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:text="rubbing alcohol"
         android:gravity="center_vertical"
-        android:padding="4dp"
+        android:padding="2dp"
         android:textSize="14sp"
         tools:text="butter" />
 

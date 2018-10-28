@@ -33,7 +33,7 @@ public class StepListRecyclerAdapter
      * The interface that receives onClick messages.
      */
     public interface ListItemClickListener {
-        void onListItemClick(Step clickedItemIndex);
+        void onListItemClick(Step currentStep, int currentItemIndex);
     }
 
     /**
@@ -64,8 +64,8 @@ public class StepListRecyclerAdapter
     public void onBindViewHolder(StepsViewHolder holder, int position) {
         Log.d(TAG, "onBindViewHolder: " + dataList.get(position).getShortDescription());
 
-        Integer id = dataList.get(position).getId();
-        String stepNum = (id < 1) ? "" : "Step: " + id.toString();
+        Integer stepId = dataList.get(position).getId();
+        String stepNum = (stepId < 1) ? "" : "Step: " + stepId.toString();
         String shortDescription = dataList.get(position).getShortDescription();
         String thumbnailUrl = dataList.get(position).getThumbnailURL();
 
@@ -73,7 +73,7 @@ public class StepListRecyclerAdapter
         holder.mStepsShortDescriptionTextView.setText(shortDescription);
         Context context = holder.mStepThumbnailImageView.getContext();
         Glide.with(context).load(thumbnailUrl)
-                .placeholder(R.drawable.ic_spoon).into(holder.mStepThumbnailImageView);
+                .placeholder(R.drawable.vg_spoon).into(holder.mStepThumbnailImageView);
     }
 
     public class StepsViewHolder
@@ -104,7 +104,7 @@ public class StepListRecyclerAdapter
         @Override
         public void onClick(View v) {
             int clickedPosition = getAdapterPosition();
-            mStepOnClickListener.onListItemClick(dataList.get(clickedPosition));
+            mStepOnClickListener.onListItemClick(dataList.get(clickedPosition), clickedPosition);
         }
     }
 

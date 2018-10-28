@@ -2,6 +2,7 @@ package com.example.android.pjbakersbuzzin;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
@@ -24,35 +25,49 @@ public class StepDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step_detail);
-        Intent intentThatStartedThisActivity = getIntent();
+        Bundle specificStepBundle = getIntent().getBundleExtra("Step_Bundle");
+//        ArrayList<Step> result = specificStepBundle.getParcelableArrayList("Selected_Step");
 
-        TextView mDetailRecipeNameView = findViewById(R.id.tv_step_description);
+        String recipeName = getIntent().getStringExtra("Current_Recipe");
+        getSupportActionBar().setTitle(recipeName);
 
-        final Integer stepId;
-        final String shortDescription;
-        final String description;
-        final String videoUrl;
-        final String thumbnailUrl;
+//        Intent intentThatStartedThisActivity = getIntent();
 
-        Bundle selectedStepBundle = getIntent().getExtras();
+        StepDetailFragment stepDetailFragment = new StepDetailFragment();
+        stepDetailFragment.setArguments(specificStepBundle);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        // Add the fragment to its container using a transaction
+        fragmentManager.beginTransaction()
+                .add(R.id.step_detail_container, stepDetailFragment)
+                .commit();
 
-        step = selectedStepBundle.getParcelableArrayList("Selected_Step");
-
-        stepId = step.get(0).getId();
-        shortDescription = step.get(0).getShortDescription();
-        description = step.get(0).getDescription();
-        videoUrl = step.get(0).getVideoURL();
-        thumbnailUrl = step.get(0).getThumbnailURL();
-
-        // temporarily just dumping all the info into one text view
-        //  as a starting point for creating the detail view
-        String text = stepId.toString() + "\n" +
-                shortDescription + "\n" +
-                description+ "\n" +
-                videoUrl+ "\n" +
-                thumbnailUrl;
-
-        mDetailRecipeNameView.setText(text);
+//        TextView mDetailRecipeNameView = findViewById(R.id.tv_step_description);
+//
+//        final Integer stepId;
+//        final String shortDescription;
+//        final String description;
+//        final String videoUrl;
+//        final String thumbnailUrl;
+//
+//        Bundle selectedStepBundle = getIntent().getExtras();
+//
+//        step = selectedStepBundle.getParcelableArrayList("Selected_Step");
+//
+//        stepId = step.get(0).getId();
+//        shortDescription = step.get(0).getShortDescription();
+//        description = step.get(0).getDescription();
+//        videoUrl = step.get(0).getVideoURL();
+//        thumbnailUrl = step.get(0).getThumbnailURL();
+//
+//        // temporarily just dumping all the info into one text view
+//        //  as a starting point for creating the detail view
+//        String text = stepId.toString() + "\n" +
+//                shortDescription + "\n" +
+//                description+ "\n" +
+//                videoUrl+ "\n" +
+//                thumbnailUrl;
+//
+//        mDetailRecipeNameView.setText(text);
     }
 
 }

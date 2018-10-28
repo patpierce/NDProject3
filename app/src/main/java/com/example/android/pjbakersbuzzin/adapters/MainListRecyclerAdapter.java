@@ -72,7 +72,7 @@ public class MainListRecyclerAdapter
         holder.numServingsView.setText(numServings);
         Context context = holder.recipeImageView.getContext();
         Glide.with(context).load(imageUrl)
-                .placeholder(R.drawable.ic_kitchen).into(holder.recipeImageView);
+                .placeholder(R.drawable.vg_kitchen).into(holder.recipeImageView);
     }
 
     public class RecipeListViewHolder
