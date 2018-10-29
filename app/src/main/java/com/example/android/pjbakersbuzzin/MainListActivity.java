@@ -93,7 +93,7 @@ public class MainListActivity
         Bundle specificRecipeBundle = new Bundle();
         ArrayList<Recipe> selectedRecipe = new ArrayList<>();
         selectedRecipe.add(clickedItemIndex);
-        specificRecipeBundle.putParcelableArrayList("Selected_Recipe",selectedRecipe);
+        specificRecipeBundle.putParcelableArrayList("Current_Recipe",selectedRecipe);
 
         final Intent intent = new Intent(this, RecipeDetailActivity.class);
         intent.putExtras(specificRecipeBundle);

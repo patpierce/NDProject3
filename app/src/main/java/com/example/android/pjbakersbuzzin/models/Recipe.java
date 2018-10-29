@@ -3,6 +3,7 @@ package com.example.android.pjbakersbuzzin.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Recipe implements Parcelable {
@@ -10,12 +11,12 @@ public class Recipe implements Parcelable {
     private Integer id;
     private String name;
     private List<Ingredient> ingredients = null;
-    private List<Step> steps = null;
+    private ArrayList<Step> steps = null;
     private Integer servings;
     private String image;
 
     public Recipe(Integer id, String name, List<Ingredient> ingredients,
-                  List<Step> steps, Integer servings, String image) {
+                  ArrayList<Step> steps, Integer servings, String image) {
         this.id = id;
         this.name = name;
         this.ingredients = ingredients;
@@ -70,11 +71,11 @@ public class Recipe implements Parcelable {
         this.ingredients = ingredients;
     }
 
-    public List<Step> getSteps() {
+    public ArrayList<Step> getSteps() {
         return steps;
     }
 
-    public void setSteps(List<Step> steps) {
+    public void setSteps(ArrayList<Step> steps) {
         this.steps = steps;
     }
 

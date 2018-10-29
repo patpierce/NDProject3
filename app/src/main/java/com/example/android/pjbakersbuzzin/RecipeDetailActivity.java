@@ -42,58 +42,46 @@ public class RecipeDetailActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
-        Intent intentThatStartedThisActivity = getIntent();
+        Intent recipeDetailIntent = getIntent();
+
+        StepDetailFragment stepDetailFragment = new StepDetailFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Bundle stepsBundle = new Bundle();
 
         TextView mDetailRecipeNameView = findViewById(R.id.tv_recipe_name);
         TextView mDetailServingsView = findViewById(R.id.tv_detail_num_servings);
         ImageView mDetailImageView = findViewById(R.id.iv_recipe_detail_image);
         Context context = mDetailImageView.getContext();
 
-        // Determine if you're creating a two-pane or single-pane display
-        if(findViewById(R.id.divider1) != null) {
-            // This divider1 will only initially exist in the two-pane case
-            mTwoPane = true;
-            if (savedInstanceState == null) {
-
-                StepDetailFragment stepDetailFragment = new StepDetailFragment();
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                // Add the fragment to its container using a transaction
-                fragmentManager.beginTransaction()
-                        .add(R.id.step_detail_container, stepDetailFragment)
-                        .commit();
-
-            }
-        }
+        final Integer mRecipeId;
+        final String mRecipeName;
+        final List<Ingredient> mIngredients;
+        final ArrayList<Step> mSteps;
+        final Integer mServings;
+        final String mImage;
 
         if (savedInstanceState == null) {
-            final Integer mRecipeId;
-            final String mRecipeName;
-            final List<Ingredient> mIngredients;
-            final List<Step> mSteps;
-            final Integer mServings;
-            final String mImage;
+            if (recipeDetailIntent != null) {
+                if (recipeDetailIntent.hasExtra("Current_Recipe")) {
+                    Bundle currentRecipeBundle = recipeDetailIntent.getExtras();
 
-            Bundle selectedRecipeBundle = getIntent().getExtras();
-
-            if (intentThatStartedThisActivity != null) {
-                if (intentThatStartedThisActivity.hasExtra("Selected_Recipe")) {
-                    assert selectedRecipeBundle != null;
-                    recipe = selectedRecipeBundle.getParcelableArrayList("Selected_Recipe");
+//                    assert currentRecipeBundle != null;
+                    recipe = currentRecipeBundle.getParcelableArrayList("Current_Recipe");
                     Log.d(TAG, "onCreate: in intent");
 
-                    // Parse the recipe info that was passed from MainActivity
+                    // Parse the recipe info from the bundle from MainListActivity
                     mRecipeId = recipe.get(0).getId();
                     mRecipeName = recipe.get(0).getName();
                     mIngredients = recipe.get(0).getIngredients();
                     mSteps = recipe.get(0).getSteps();
                     mServings = recipe.get(0).getServings();
-                    String numServings = "  Serves: " + mServings;
                     mImage = recipe.get(0).getImage();
                     Log.d(TAG, "onCreate: mRecipeName " + mRecipeName);
 
                     // Display the recipe info into various views
                     Glide.with(context).load(mImage).placeholder(R.drawable.vg_small_oven).into(mDetailImageView);
                     mDetailRecipeNameView.setText(mRecipeName);
+                    String numServings = "  Serves: " + mServings;
                     mDetailServingsView.setText(numServings);
 
                     // Setup RecyclerView for Ingredients
@@ -103,7 +91,6 @@ public class RecipeDetailActivity
                     mIngredientsListRecView.setLayoutManager(ilayoutManager);
                     mIngredientsListRecView.setHasFixedSize(true);
                     mIngredientsListRecView.setAdapter(mIngredientsAdapter);
-                    Log.d(TAG, "onCreate: mIngredients" + mIngredients);
                     mIngredientsAdapter.setIngredientData(mIngredients, context);
 
                     // Setup RecyclerView for Steps
@@ -114,51 +101,70 @@ public class RecipeDetailActivity
                     mStepsListRecView.setHasFixedSize(true);
                     mStepsListRecView.setAdapter(mStepsAdapter);
                     mStepsAdapter.setStepData(mSteps, context);
+
+                    // If the screen is wide enough for two-pane, start step detail fragment
+                    if (findViewById(R.id.divider1) != null) {
+                        // divider1 will only exist in the two-pane case
+                        mTwoPane = true;
+                        Log.d(TAG, "onCreate: in two pane mode");
+                        if (savedInstanceState == null) {
+
+                            // Setup bundle for fragment argument
+                            stepsBundle.putParcelableArrayList("Steps_Bundle", mSteps);
+                            stepDetailFragment.setArguments(stepsBundle);
+
+                            // Add the fragment to its container using a transaction
+                            fragmentManager.beginTransaction()
+                                    .add(R.id.step_detail_container, stepDetailFragment)
+                                    .commit();
+
+                        }
+                    }
                 }
             }
+        }
+        else {
+            Log.d(TAG, "onCreate: found savedInstanceState");
+            // load stuff from savedInstanceState?
         }
     }
 
     @Override
-    public void onListItemClick(Step currentStep, int clickedItemIndex) {
-        ArrayList<Step> selectedStep = new ArrayList<>();
-        selectedStep.add(currentStep);
-        Log.d(TAG, "onListItemClick: selectedStep.size " + selectedStep.size());
+    public void onListItemClick(ArrayList<Step> mSteps, int clickedItemIndex) {
 
         Bundle specificStepBundle = new Bundle();
-        specificStepBundle.putParcelableArrayList("Selected_Step", selectedStep);
-//        stepBundle.putParcelableArrayList(SELECTED_STEPS,(ArrayList<Step>) stepsOut);
-        specificStepBundle.putInt("Step_Index",clickedItemIndex);
-        specificStepBundle.putString("Title",recipeName);
-//        fragment.setArguments(stepBundle);
 
-        Intent intent = new Intent(this, StepDetailActivity.class);
-        intent.putExtra("Step_Bundle", specificStepBundle);
-        intent.putExtra("Current_Recipe", recipe.get(0).getName());
-        startActivity(intent);
+        Log.d(TAG, "onListItemClick: mSteps.size " + mSteps.size());
 
-        ////                if (mTwoPane) {
-////                    Bundle arguments = new Bundle();
-////                    arguments.putString(StepDetailFragment.ARG_ITEM_ID, item.id);
-////                    StepDetailFragment fragment = new StepDetailFragment();
-////                    fragment.setArguments(arguments);
-////                    mParentActivity.getSupportFragmentManager().beginTransaction()
-////                            .replace(R.id.item_detail_container, fragment)
-////                            .commit();
-////                } else {
-//            Context context = v.getContext();
-//            Intent intent = new Intent(context, StepDetailActivity.class);
-////                intent.putExtra(StepDetailFragment.ARG_ITEM_ID, recipeId);
-//            intent.putExtra("RecipeStepEntry",
-//                    new RecipeStepEntry(
-//                            stepId,
-//                            shortDescription,
-//                            description,
-//                            videoUrl,
-//                            thumbnailUrl));
-//            context.startActivity(intent);
+        // Setup bundle to pass to StepDetailActivity or StepDetailActivityFragment
+        specificStepBundle.putParcelableArrayList("Steps_Bundle", mSteps);
+        specificStepBundle.putInt("Step_Index", clickedItemIndex);
+        specificStepBundle.putString("Title", recipeName);
 
+        if (mTwoPane) {
+            StepDetailFragment stepDetailFragment = new StepDetailFragment();
+            FragmentManager fragmentManager = getSupportFragmentManager();
 
+            Log.d(TAG, "onListItemClick: in two pane mode");
+            // Add bundle as fragment argument, then start fragment in container
+            stepDetailFragment.setArguments(specificStepBundle);
+            fragmentManager.beginTransaction()
+                    .replace(R.id.step_detail_container, stepDetailFragment)
+                    .commit();
+        }
+        else {
+            // Add bundle as intent extra, then start Activity with the intent
+            Intent intent = new Intent(this, StepDetailActivity.class);
+            intent.putExtra("Steps_Bundle", specificStepBundle);
+            intent.putExtra("Current_Recipe_Name", recipe.get(0).getName());
+            startActivity(intent);
+        }
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
 }

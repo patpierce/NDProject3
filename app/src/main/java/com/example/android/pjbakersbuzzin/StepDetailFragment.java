@@ -1,6 +1,9 @@
 package com.example.android.pjbakersbuzzin;
 
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +12,25 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.pjbakersbuzzin.models.Step;
+import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.DefaultRenderersFactory;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.LoadControl;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.hls.HlsMediaSource;
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelection;
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
+import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.BandwidthMeter;
+import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 
 import java.util.ArrayList;
 
@@ -18,14 +40,19 @@ public class StepDetailFragment extends Fragment {
 
     // Strings to store information about the list of steps and list index
     private ArrayList<Step> steps;
-    private Integer currentStep;
+    private Integer clickedItemIndex;
     private Integer stepId;
     private String recipeName;
     private String videoUrl;
     private String shortDescription;
     private String description;
     private String thumbnailURL;
-    private String stepString;
+    private String stepTitleString;
+
+    private PlayerView exoPlayerView;
+    private SimpleExoPlayer exoPlayer;
+    private BandwidthMeter bandwidthMeter;
+    private Handler mainHandler;
 
     public StepDetailFragment() {
     }
@@ -34,139 +61,75 @@ public class StepDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle savedInstanceState) {
 
         Log.d(TAG, "onCreateView: begin");
-        steps = getArguments().getParcelableArrayList("Selected_Step");
+        steps = getArguments().getParcelableArrayList("Steps_Bundle");
         Log.d(TAG, "onCreateView: steps.size " + steps.size());
-        currentStep = getArguments().getInt("Step_Index");
-        Log.d(TAG, "onCreateView: currentStep " + currentStep);
+        clickedItemIndex = getArguments().getInt("Step_Index");
+        Log.d(TAG, "onCreateView: clickedItemIndex " + clickedItemIndex);
 
 //        recipeName = getArguments().getString("Title");
-        stepId = steps.get(0).getId();
-        shortDescription = steps.get(0).getShortDescription();
-        description = steps.get(0).getDescription();
-        videoUrl = steps.get(0).getVideoURL();
-        thumbnailURL = steps.get(0).getThumbnailURL();
+        stepId = steps.get(clickedItemIndex).getId();
+        shortDescription = steps.get(clickedItemIndex).getShortDescription();
+        description = steps.get(clickedItemIndex).getDescription();
+        videoUrl = steps.get(clickedItemIndex).getVideoURL();
+        thumbnailURL = steps.get(clickedItemIndex).getThumbnailURL();
 
-        View rootView = inflater.inflate(R.layout.fragment_step_detail, viewGroup, false);
-        TextView stepTitleView = (TextView) rootView.findViewById(R.id.tv_step_short_description);
-        TextView stepInstructionsView = (TextView) rootView.findViewById(R.id.tv_step_description);
+        View stepView = inflater.inflate(R.layout.fragment_step_detail, viewGroup, false);
+        TextView stepTitleView = stepView.findViewById(R.id.tv_step_short_description);
+        TextView stepInstructionsView = stepView.findViewById(R.id.tv_step_description);
 
-        stepString = (stepId < 1) ? "" : "Step " + stepId.toString() + ": ";
-        stepString = stepString + shortDescription;
-        stepTitleView.setText(stepString);
+        stepTitleString = (stepId < 1) ? "" : "Step " + stepId.toString() + ": ";
+        stepTitleString = stepTitleString + shortDescription;
+        stepTitleView.setText(stepTitleString);
 
         if (!description.equals(shortDescription)) {
             stepInstructionsView.setText(description);
         }
 
-//        stepInstructionsView.setText("do all the stuff!");
-//        textView.setVisibility(View.VISIBLE);
+        exoPlayerView = stepView.findViewById(R.id.exo_player_view);
+        exoPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
+        exoPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH);
 
-//        TextView textView;
-//        mainHandler = new Handler();
-//        bandwidthMeter = new DefaultBandwidthMeter();
+        if (!videoUrl.isEmpty()) {
+            initializePlayer(Uri.parse(videoUrl));
+        }
 
-//        itemClickListener =(RecipeDetailActivity)getActivity();
+        // todo add buttons for next and prev
 
-//        recipe = new ArrayList<>();
-
-//        if(savedInstanceState == null) {
-//            steps =getArguments().getParcelableArrayList("Selected_Steps");
-//            if (steps!=null) {
-//                steps =getArguments().getParcelableArrayList("Selected_Steps");
-//                currentStep=getArguments().getInt("current");
-//                recipeName=getArguments().getString("Title");
-//            }
-//            else {
-//                recipe =getArguments().getParcelableArrayList(SELECTED_RECIPES);
-//                //casting List to ArrayList
-//                steps=(ArrayList<Step>)recipe.get(0).getSteps();
-//                currentStep=0;
-//            }
-//
-//        }
-//        else
-//        {
-//            steps = savedInstanceState.getParcelableArrayList("Selected_Steps");
-//            currentStep = savedInstanceState.getInt("current");
-//            recipeName = savedInstanceState.getString("Title");
-//
-//
-//        }
-
-
-//        simpleExoPlayerView = (SimpleExoPlayerView) rootView.findViewById(R.id.playerView);
-//        simpleExoPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
-//
-//        String videoURL = steps.get(selectedIndex).getVideoURL();
-//
-//        if (rootView.findViewWithTag("sw600dp-port-recipe_step_detail")!=null) {
-//            recipeName=((RecipeDetailActivity) getActivity()).recipeName;
-//            ((RecipeDetailActivity) getActivity()).getSupportActionBar().setTitle(recipeName);
-//        }
-//
-//        String imageUrl=steps.get(selectedIndex).getThumbnailURL();
-//        if (imageUrl!="") {
-//            Uri builtUri = Uri.parse(imageUrl).buildUpon().build();
-//            ImageView thumbImage = (ImageView) rootView.findViewById(R.id.thumbImage);
-//            Picasso.with(getContext()).load(builtUri).into(thumbImage);
-//        }
-//
-//        if (!videoURL.isEmpty()) {
-//
-//
-//            initializePlayer(Uri.parse(steps.get(selectedIndex).getVideoURL()));
-//
-//            if (rootView.findViewWithTag("sw600dp-land-recipe_step_detail")!=null) {
-//                getActivity().findViewById(R.id.fragment_container2).setLayoutParams(new LinearLayout.LayoutParams(-1,-2));
-//                simpleExoPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH);
-//            }
-//            else if (isInLandscapeMode(getContext())){
-//                textView.setVisibility(View.GONE);
-//            }
-//        }
-//        else {
-//            player=null;
-//            simpleExoPlayerView.setForeground(ContextCompat.getDrawable(getContext(), R.drawable.ic_visibility_off_white_36dp));
-//            simpleExoPlayerView.setLayoutParams(new LinearLayout.LayoutParams(300, 300));
-//        }
-
-
-//        Button mPrevStep = (Button) rootView.findViewById(R.id.previousStep);
-//        Button mNextstep = (Button) rootView.findViewById(R.id.nextStep);
-
-//        mPrevStep.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View view) {
-//                if (steps.get(selectedIndex).getId() > 0) {
-//                    if (player!=null){
-//                        player.stop();
-//                    }
-//                    itemClickListener.onListItemClick(steps,steps.get(selectedIndex).getId() - 1,recipeName);
-//                }
-//                else {
-//                    Toast.makeText(getActivity(),"You already are in the First step of the recipe", Toast.LENGTH_SHORT).show();
-//
-//                }
-//            }});
-
-//        mNextstep.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View view) {
-//
-//                int lastIndex = steps.size()-1;
-//                if (steps.get(selectedIndex).getId() < steps.get(lastIndex).getId()) {
-//                    if (player!=null){
-//                        player.stop();
-//                    }
-//                    itemClickListener.onListItemClick(steps,steps.get(selectedIndex).getId() + 1,recipeName);
-//                }
-//                else {
-//                    Toast.makeText(getContext(),"You already are in the Last step of the recipe", Toast.LENGTH_SHORT).show();
-//
-//                }
-//            }});
-
-
-
-
-        return rootView;
+        return stepView;
     }
+
+    private void initializePlayer(Uri mediaUri) {
+        if (exoPlayer == null) {
+            Log.d(TAG, "initializePlayer: url " + mediaUri.toString());
+
+            exoPlayer = ExoPlayerFactory.newSimpleInstance(
+                    new DefaultRenderersFactory(getContext()),
+                    new DefaultTrackSelector(),
+                    new DefaultLoadControl());
+
+            exoPlayerView.setPlayer(exoPlayer);
+            exoPlayer.seekTo(0);
+
+            Uri uri = Uri.parse(videoUrl);
+            MediaSource mediaSource = buildMediaSource(uri);
+            exoPlayer.prepare(mediaSource, true, false);
+            exoPlayer.setPlayWhenReady(true);
+
+        }
+    }
+
+    private MediaSource buildMediaSource(Uri uri) {
+
+        Context context = getContext();
+        // Measures bandwidth during playback. Can be null if not required.
+        DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+        // Produces DataSource instances through which media data is loaded.
+        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(context,
+                Util.getUserAgent(context, "Bakers Buzzin"), bandwidthMeter);
+        MediaSource videoSource = new ExtractorMediaSource.
+                Factory(dataSourceFactory).createMediaSource(uri);
+        // Prepare the player with the source.
+        return videoSource;
+    }
+
 }

@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.example.android.pjbakersbuzzin.R;
 import com.example.android.pjbakersbuzzin.models.Step;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,7 +26,7 @@ public class StepListRecyclerAdapter
 
     private static final String TAG = StepListRecyclerAdapter.class.getSimpleName();
 
-    private List<Step> dataList;
+    private ArrayList<Step> dataList;
     private Context context;
     private final ListItemClickListener mStepOnClickListener;
 
@@ -33,7 +34,7 @@ public class StepListRecyclerAdapter
      * The interface that receives onClick messages.
      */
     public interface ListItemClickListener {
-        void onListItemClick(Step currentStep, int currentItemIndex);
+        void onListItemClick(ArrayList<Step> mSteps, int clickedItemIndex);
     }
 
     /**
@@ -47,7 +48,7 @@ public class StepListRecyclerAdapter
         mStepOnClickListener = listener;
     }
 
-    public void setStepData(List<Step> stepData, Context contextIn) {
+    public void setStepData(ArrayList<Step> stepData, Context contextIn) {
         dataList = stepData;
         context = contextIn;
         notifyDataSetChanged();
@@ -104,7 +105,7 @@ public class StepListRecyclerAdapter
         @Override
         public void onClick(View v) {
             int clickedPosition = getAdapterPosition();
-            mStepOnClickListener.onListItemClick(dataList.get(clickedPosition), clickedPosition);
+            mStepOnClickListener.onListItemClick(dataList, clickedPosition);
         }
     }
 

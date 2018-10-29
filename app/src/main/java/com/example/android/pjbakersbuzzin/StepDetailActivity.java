@@ -11,27 +11,23 @@ import com.example.android.pjbakersbuzzin.models.Step;
 import java.util.ArrayList;
 
 /**
- * An activity representing a single Item detail screen. This
- * activity is only used on narrow width devices. On tablet-size devices,
- * item details are presented side-by-side with a list of items
- * in a {@link RecipeDetailActivity}.
+ * An activity representing a single step detail screen.
+ * This activity is only used on narrow width devices to load a fragment.
+ * On tablet-size devices, {@link RecipeDetailActivity} presents that fragment
+ * side-by-side with the list of steps and the other "recipe details".
  */
 public class StepDetailActivity extends AppCompatActivity {
 
-    private static final String TAG = StepDetailActivity.class.getSimpleName();
-    private ArrayList<Step> step;
+//    private static final String TAG = StepDetailActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step_detail);
-        Bundle specificStepBundle = getIntent().getBundleExtra("Step_Bundle");
-//        ArrayList<Step> result = specificStepBundle.getParcelableArrayList("Selected_Step");
+        Bundle specificStepBundle = getIntent().getBundleExtra("Steps_Bundle");
 
-        String recipeName = getIntent().getStringExtra("Current_Recipe");
+        String recipeName = getIntent().getStringExtra("Current_Recipe_Name");
         getSupportActionBar().setTitle(recipeName);
-
-//        Intent intentThatStartedThisActivity = getIntent();
 
         StepDetailFragment stepDetailFragment = new StepDetailFragment();
         stepDetailFragment.setArguments(specificStepBundle);
@@ -40,34 +36,6 @@ public class StepDetailActivity extends AppCompatActivity {
         fragmentManager.beginTransaction()
                 .add(R.id.step_detail_container, stepDetailFragment)
                 .commit();
-
-//        TextView mDetailRecipeNameView = findViewById(R.id.tv_step_description);
-//
-//        final Integer stepId;
-//        final String shortDescription;
-//        final String description;
-//        final String videoUrl;
-//        final String thumbnailUrl;
-//
-//        Bundle selectedStepBundle = getIntent().getExtras();
-//
-//        step = selectedStepBundle.getParcelableArrayList("Selected_Step");
-//
-//        stepId = step.get(0).getId();
-//        shortDescription = step.get(0).getShortDescription();
-//        description = step.get(0).getDescription();
-//        videoUrl = step.get(0).getVideoURL();
-//        thumbnailUrl = step.get(0).getThumbnailURL();
-//
-//        // temporarily just dumping all the info into one text view
-//        //  as a starting point for creating the detail view
-//        String text = stepId.toString() + "\n" +
-//                shortDescription + "\n" +
-//                description+ "\n" +
-//                videoUrl+ "\n" +
-//                thumbnailUrl;
-//
-//        mDetailRecipeNameView.setText(text);
     }
 
 }
