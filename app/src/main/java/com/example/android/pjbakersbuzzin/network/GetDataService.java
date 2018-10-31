@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.http.GET;
 
+// retrofit interface
 public interface GetDataService {
 
     @GET("/android-baking-app-json")

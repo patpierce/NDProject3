@@ -72,8 +72,8 @@ public class IngredientListRecyclerAdapter
     }
 
     public class IngredientsViewHolder
-            extends RecyclerView.ViewHolder
-            implements OnClickListener {
+            extends RecyclerView.ViewHolder {
+//            implements OnClickListener {
 
         private final TextView mIngredientNameTextView;
         private final TextView mIngredientQuantityTextView;
@@ -94,15 +94,12 @@ public class IngredientListRecyclerAdapter
             mIngredientQuantityTextView = itemView.findViewById(R.id.tv_ingredient_value);
             mIngredientMeasureTextView = itemView.findViewById(R.id.tv_ingredient_measure);
             // Call setOnClickListener on the View passed into the constructor (use 'this' as the OnClickListener)
-            itemView.setOnClickListener(this);
+//            itemView.setOnClickListener(this);
         }
 
-        @Override
-        public void onClick(View v) {
-//            int clickedPosition = getAdapterPosition();
-//            String[] ingredientInfo = dataList[clickedPosition];
-//            mIngredientOnClickListener.onListItemClick(dataList.get(clickedPosition));
-        }
+//        @Override
+//        public void onClick(View v) {
+//        }
     }
 
     @Override

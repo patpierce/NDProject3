@@ -1,6 +1,5 @@
 package com.example.android.pjbakersbuzzin.adapters;
 
-
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -27,13 +26,11 @@ public class MainListRecyclerAdapter
 
     private ArrayList<Recipe> dataList;
     private Context context;
+
     private ListItemClickListener onClickListener;
 
-    /**
-     * The interface that receives onClick messages.
-     */
     public interface ListItemClickListener {
-        void onListItemClick(Recipe clickedItemIndex);
+        void onListItemClick(Recipe clickedRecipeCard);
     }
 
     /**
@@ -91,7 +88,7 @@ public class MainListRecyclerAdapter
          * @param itemView The View that you inflated in
          *                 {@link MainListRecyclerAdapter#onCreateViewHolder(ViewGroup, int)}
          */
-        public RecipeListViewHolder(View itemView) {
+        private RecipeListViewHolder(View itemView) {
             super(itemView);
 
             recipeNameView = itemView.findViewById(R.id.tv_content);

@@ -3,6 +3,7 @@ package com.example.android.pjbakersbuzzin.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+// retrieves recipe ingredients from retrofit call
 public class Ingredient implements Parcelable{
 
     private Double quantity;

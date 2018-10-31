@@ -18,7 +18,7 @@ import java.util.ArrayList;
  */
 public class StepDetailActivity extends AppCompatActivity {
 
-//    private static final String TAG = StepDetailActivity.class.getSimpleName();
+    private static final String TAG = StepDetailActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -2,12 +2,16 @@ package com.example.android.pjbakersbuzzin;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +31,8 @@ public class MainListActivity
         extends AppCompatActivity
         implements MainListRecyclerAdapter.ListItemClickListener {
 
+    private static final String TAG = MainListActivity.class.getSimpleName();
+
     private MainListRecyclerAdapter adapter;
     private RecyclerView recyclerView;
     private TextView mErrorMessageDisplay;
@@ -42,12 +48,28 @@ public class MainListActivity
         mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
         mLoadingIndicator.setVisibility(View.VISIBLE);
 
-        // This TextView is used to display errors and will be hidden if there are no errors
+        // TextView to display errors, hidden if no errors
         mErrorMessageDisplay = findViewById(R.id.tv_error_message_display);
+
+        Resources resources = getResources();
+        Configuration config = resources.getConfiguration();
+        float dens = resources.getDisplayMetrics().density;
+        // Note, screenHeightDp isn't reliable
+        // (it seems to be too small by the height of the status bar),
+        // but we assume screenWidthDp is reliable.
+        int screenWidthDp = config.screenWidthDp;
+//        Log.d(TAG, "screenWidthDp: " + screenWidthDp);
+        int screenWidthPx = (int) (screenWidthDp * dens);
+//        Log.d(TAG, "screenWidthPx: " + screenWidthPx);
+        int itemWidthPx = (int) (resources.getDimension(R.dimen.recipe_card_width));
+        int numberOfColumns = (screenWidthPx / itemWidthPx);
+//        Log.d(TAG, "itemWidthPx: " + itemWidthPx);
+//        Log.d(TAG, "numberOfColumns: " + numberOfColumns);
 
         // Setup RecyclerView for Recipes
         recyclerView = findViewById(R.id.rv_main_list);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, numberOfColumns);
         final MainListRecyclerAdapter adapter = new MainListRecyclerAdapter(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
@@ -67,9 +89,6 @@ public class MainListActivity
                 Log.v("status code: ", statusCode.toString());
 
                 ArrayList<Recipe> recipes = response.body();
-                // Take response from recipe api call put it in a bundle
-//                Bundle recipesBundle = new Bundle();
-//                recipesBundle.putParcelableArrayList("All_Recipes", recipes);
 
                 adapter.setRecipeData(recipes, context);
                 mLoadingIndicator.setVisibility(View.INVISIBLE);
@@ -89,10 +108,10 @@ public class MainListActivity
     }
 
     @Override
-    public void onListItemClick(Recipe clickedItemIndex) {
+    public void onListItemClick(Recipe clickedRecipeCard) {
         Bundle specificRecipeBundle = new Bundle();
         ArrayList<Recipe> selectedRecipe = new ArrayList<>();
-        selectedRecipe.add(clickedItemIndex);
+        selectedRecipe.add(clickedRecipeCard);
         specificRecipeBundle.putParcelableArrayList("Current_Recipe",selectedRecipe);
 
         final Intent intent = new Intent(this, RecipeDetailActivity.class);

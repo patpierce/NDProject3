@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 
 import retrofit2.converter.gson.GsonConverterFactory;
 
+// retrofit client instance
 public final class RetrofitClientInstance {
 
     private static GetDataService recipeList;

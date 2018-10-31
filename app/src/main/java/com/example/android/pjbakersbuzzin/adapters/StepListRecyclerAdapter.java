@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,7 +14,6 @@ import com.example.android.pjbakersbuzzin.R;
 import com.example.android.pjbakersbuzzin.models.Step;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * {@link StepListRecyclerAdapter} exposes a list of step items to a
@@ -28,13 +26,11 @@ public class StepListRecyclerAdapter
 
     private ArrayList<Step> dataList;
     private Context context;
+
     private final ListItemClickListener mStepOnClickListener;
 
-    /**
-     * The interface that receives onClick messages.
-     */
     public interface ListItemClickListener {
-        void onListItemClick(ArrayList<Step> mSteps, int clickedItemIndex);
+        void onListItemClick(ArrayList<Step> steps, int clickedItemIndex);
     }
 
     /**
@@ -79,7 +75,7 @@ public class StepListRecyclerAdapter
 
     public class StepsViewHolder
             extends RecyclerView.ViewHolder
-            implements OnClickListener {
+            implements View.OnClickListener {
 
         private final TextView mStepNumberTextView;
         private final TextView mStepsShortDescriptionTextView;

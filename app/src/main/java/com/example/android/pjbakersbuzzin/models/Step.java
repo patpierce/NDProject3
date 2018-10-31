@@ -3,6 +3,7 @@ package com.example.android.pjbakersbuzzin.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+// retrieves recipe steps from retrofit call
 public class Step implements Parcelable {
 
     private Integer id;
