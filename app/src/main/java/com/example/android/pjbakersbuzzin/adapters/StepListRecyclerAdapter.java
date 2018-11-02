@@ -30,7 +30,7 @@ public class StepListRecyclerAdapter
     private final ListItemClickListener mStepOnClickListener;
 
     public interface ListItemClickListener {
-        void onListItemClick(ArrayList<Step> steps, int clickedItemIndex);
+        void onListItemClick(int clickedItemIndex);
     }
 
     /**
@@ -101,7 +101,7 @@ public class StepListRecyclerAdapter
         @Override
         public void onClick(View v) {
             int clickedPosition = getAdapterPosition();
-            mStepOnClickListener.onListItemClick(dataList, clickedPosition);
+            mStepOnClickListener.onListItemClick(clickedPosition);
         }
     }
 

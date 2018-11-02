@@ -4,10 +4,8 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +26,6 @@ import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
@@ -45,7 +42,6 @@ public class StepDetailFragment extends Fragment {
     private ArrayList<Step> steps;
     private Integer clickedItemIndex;
     private Integer stepId;
-    private String recipeName;
     private String videoUrl;
     private String shortDescription;
     private String description;
@@ -55,43 +51,55 @@ public class StepDetailFragment extends Fragment {
     private PlayerView exoPlayerView;
     private ImageView exoPlaceholderView;
     private SimpleExoPlayer exoPlayer;
-    private BandwidthMeter bandwidthMeter;
-    private Handler mainHandler;
 
     public StepDetailFragment() {
     }
 
-    private ListItemClickListener navClickListener;
+    ButtonClickListener navClickListener;
 
-    public interface ListItemClickListener {
-        void onListItemClick(int clickedItemIndex);
+    public interface ButtonClickListener {
+        void onButtonClick(Integer targetStepIndex);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        // This makes sure that the host activity has implemented the callback interface
+        try {
+            navClickListener = (ButtonClickListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement ButtonClickListener");
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle savedInstanceState) {
 
-        Bundle arguments = getArguments();
         Log.d(TAG, "onCreateView: begin");
         if (savedInstanceState != null) {
             Log.d(TAG, "onCreateView: savedInstanceState yes");
             steps = savedInstanceState.getParcelableArrayList("Saved_Steps_Bundle");
             clickedItemIndex = savedInstanceState.getInt("Saved_Step_Index");
         }
-        else if (arguments != null && arguments.containsKey("Steps_Bundle")) {
-            Log.d(TAG, "onCreateView: savedInstanceState no");
-            steps = arguments.getParcelableArrayList("Steps_Bundle");
-            clickedItemIndex = arguments.getInt("Step_Index");
-        }
-        if (steps == null) {
-            Log.d(TAG, "onCreateView: savedInstanceState steps still null");
-            recipe = getArguments().getParcelableArrayList("Current_Recipe");
-            steps = recipe.get(0).getSteps();
-            clickedItemIndex = 0;
-        }
-        Log.d(TAG, "onCreateView: steps.size " + steps.size());
-        Log.d(TAG, "onCreateView: clickedItemIndex " + clickedItemIndex);
 
-        //        recipeName = getArguments().getString("Title");
+        Bundle arguments = getArguments();
+        if (steps == null) {
+            if (arguments != null) {
+                if (arguments.containsKey("Current_Recipe")) {
+                    recipe = getArguments().getParcelableArrayList("Current_Recipe");
+                    steps = recipe.get(0).getSteps();
+                    Log.d(TAG, "onCreateView: getting steps from Current_Recipe " + steps.size());
+                }
+                if (arguments.containsKey("Step_Index")) {
+                    clickedItemIndex = arguments.getInt("Step_Index");
+                    Log.d(TAG, "onCreateView: getting clickedItemIndex from Step_Index " + clickedItemIndex);
+                }
+                else
+                    clickedItemIndex = 0;
+            }
+        }
+
         stepId = steps.get(clickedItemIndex).getId();
         shortDescription = steps.get(clickedItemIndex).getShortDescription();
         description = steps.get(clickedItemIndex).getDescription();
@@ -113,7 +121,7 @@ public class StepDetailFragment extends Fragment {
         exoPlaceholderView = stepView.findViewById(R.id.exo_placeholder_view);
         exoPlayerView = stepView.findViewById(R.id.exo_player_view);
         exoPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
-        exoPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH);
+//        exoPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH);
 
         if (!videoUrl.equals("")) {
             Log.d(TAG, "onCreateView: videoUrl " + videoUrl);
@@ -123,32 +131,25 @@ public class StepDetailFragment extends Fragment {
         }
         else {
             Log.d(TAG, "onCreateView: videoUrl empty");
-
-            exoPlayer = null;
             exoPlayerView.setVisibility(View.INVISIBLE);
             exoPlaceholderView.setVisibility(View.VISIBLE);
+            exoPlayer = null;
 //            exoPlayerView.setForeground(ContextCompat.getDrawable(getContext(), R.drawable.vg_silicone_spatula));
 //            exoPlayerView.setLayoutParams(new LinearLayout.LayoutParams(300, 300));
-
         }
 
-        // todo add buttons for next and prev
         Button prevButtonView = stepView.findViewById(R.id.previous_button);
         prevButtonView.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View view) {
-                if (steps.get(clickedItemIndex).getId() > 0) {
-                    if (exoPlayer!=null){
-                        exoPlayer.stop();
-                    }
-                    Integer newindex = steps.get(clickedItemIndex).getId() - 1;
-                    Log.d(TAG, "onClick: clickedItemIndex " + clickedItemIndex);
-                    Log.d(TAG, "onClick: steps.get(clickedItemIndex).getId() " + steps.get(clickedItemIndex).getId());
-                    Log.d(TAG, "onClick: newindex " + newindex);
-                    navClickListener.onListItemClick(newindex);
+                if (clickedItemIndex > 0) {
+                    Integer targetStepIndex = clickedItemIndex - 1;
+                    if (exoPlayer != null){ exoPlayer.stop(); }
+                    navClickListener.onButtonClick(targetStepIndex);
                 }
                 else {
-                    Toast.makeText(getActivity(),"No previous steps", Toast.LENGTH_SHORT).show();
-
+                    Toast.makeText(getActivity(),
+                            "No previous steps", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -156,19 +157,14 @@ public class StepDetailFragment extends Fragment {
         Button nextButtonView = stepView.findViewById(R.id.next_button);
         nextButtonView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                if (steps.get(clickedItemIndex).getId() < steps.size() - 1) {
-                    if (exoPlayer!=null){
-                        exoPlayer.stop();
-                    }
-                    int newindex = steps.get(clickedItemIndex).getId() + 1;
-                    Log.d(TAG, "onClick: clickedItemIndex " + clickedItemIndex);
-                    Log.d(TAG, "onClick: steps.get(clickedItemIndex).getId() " + steps.get(clickedItemIndex).getId());
-                    Log.d(TAG, "onClick: newindex " + newindex);
-                    navClickListener.onListItemClick(newindex);
+                if (clickedItemIndex < (steps.size() - 1)) {
+                    Integer targetStepIndex = clickedItemIndex + 1;
+                    if (exoPlayer != null){ exoPlayer.stop(); }
+                    navClickListener.onButtonClick(targetStepIndex);
                 }
                 else {
-                    Toast.makeText(getActivity(),"No previous steps", Toast.LENGTH_SHORT).show();
-
+                    Toast.makeText(getActivity(),
+                            "No more steps", Toast.LENGTH_SHORT).show();
                 }
             }
         });
