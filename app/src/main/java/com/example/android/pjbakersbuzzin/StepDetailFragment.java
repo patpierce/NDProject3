@@ -1,6 +1,7 @@
 package com.example.android.pjbakersbuzzin;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -232,7 +234,7 @@ public class StepDetailFragment extends Fragment {
                 Factory(dataSourceFactory).createMediaSource(uri);
     }
 
-    public void expolayerStopReleaseResources() {
+    public void exoPlayerStopReleaseResources() {
         if (exoPlayer != null) {
             exoPlayer.stop();
             exoPlayer.release();
@@ -242,48 +244,27 @@ public class StepDetailFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        expolayerStopReleaseResources();
+        exoPlayerStopReleaseResources();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        expolayerStopReleaseResources();
+        exoPlayerStopReleaseResources();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        expolayerStopReleaseResources();
+        exoPlayerStopReleaseResources();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        expolayerStopReleaseResources();
+        exoPlayerStopReleaseResources();
         exoPlayer = null;
     }
-
-//    @Override
-//    public void onConfigurationChanged(Configuration newConfig) {
-//        super.onConfigurationChanged(newConfig);
-//        ConstraintLayout.LayoutParams params =
-//                (ConstraintLayout.LayoutParams) exoPlayerView.getLayoutParams();
-//
-//        Log.d(TAG, "onConfigurationChanged: newConfig.orientation" + newConfig.orientation);
-//        // Checking the orientation of the screen
-//        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-//            //First Hide other objects (listview or recyclerview), better hide them using Gone.
-//            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-//            params.height = ViewGroup.LayoutParams.MATCH_PARENT;
-//            exoPlayerView.setLayoutParams(params);
-//        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-//            //unhide your objects here.
-//            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-//            params.height = 250;
-//            exoPlayerView.setLayoutParams(params);
-//        }
-//    }
 
     @Override
     public void onSaveInstanceState(Bundle currentState) {

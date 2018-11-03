@@ -1,15 +1,24 @@
 package com.example.android.pjbakersbuzzin;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.example.android.pjbakersbuzzin.models.Recipe;
+import com.google.android.exoplayer2.ui.PlayerView;
 
 import java.util.ArrayList;
 
@@ -23,7 +32,6 @@ public class StepDetailActivity extends AppCompatActivity
         implements StepDetailFragment.ButtonClickListener {
 
     private static final String TAG = StepDetailActivity.class.getSimpleName();
-    private Parcelable savedRecyclerLayoutState;
     Bundle currentRecipeBundle;
     private ArrayList<Recipe> recipe;
 
@@ -109,6 +117,57 @@ public class StepDetailActivity extends AppCompatActivity
             recipe = savedInstanceState.getParcelableArrayList("Current_Recipe");
             clickedItemIndex = savedInstanceState.getInt("Saved_Step_Index");
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        PlayerView exoPlayerView = findViewById(R.id.exo_player_view);
+
+        if (exoPlayerView.getVisibility() == View.VISIBLE) {
+
+            TextView stepTitleView = findViewById(R.id.tv_step_short_description);
+            TextView stepInstructionsView = findViewById(R.id.tv_step_description);
+            LinearLayout buttonsRowLayout = findViewById(R.id.ll_buttons_row);
+            View decorView = getWindow().getDecorView();
+            LinearLayout.LayoutParams lLparams =
+                    (LinearLayout.LayoutParams) exoPlayerView.getLayoutParams();
+
+            if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                // hide other views
+                stepTitleView.setVisibility(View.GONE);
+                stepInstructionsView.setVisibility(View.GONE);
+                buttonsRowLayout.setVisibility(View.GONE);
+                // hide app top toolbar
+                if(getSupportActionBar()!=null) { getSupportActionBar().hide(); }
+                // hide the home/back/overview buttons (these come back when you touch anywhere)
+                decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+                // hide the top android status bar
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                        WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+                // set video window match_parent w and h
+                lLparams.width = lLparams.MATCH_PARENT;
+                lLparams.height = lLparams.MATCH_PARENT;
+                exoPlayerView.setLayoutParams(lLparams);
+            }
+            else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                // set video window back to using "layout_weight" for height
+                lLparams.width = lLparams.MATCH_PARENT;
+                lLparams.height = 0;
+                exoPlayerView.setLayoutParams(lLparams);
+
+                // unhide top android status bar
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                if(getSupportActionBar()!=null) { getSupportActionBar().show(); }
+                stepTitleView.setVisibility(View.VISIBLE);
+                stepInstructionsView.setVisibility(View.VISIBLE);
+                buttonsRowLayout.setVisibility(View.VISIBLE);
+            }
+
+        }
+
     }
 
 }
