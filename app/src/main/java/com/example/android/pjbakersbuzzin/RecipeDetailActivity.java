@@ -26,7 +26,7 @@ import java.util.ArrayList;
 public class RecipeDetailActivity
         extends AppCompatActivity
         implements StepListRecyclerAdapter.ListItemClickListener,
-                   StepDetailFragment.ButtonClickListener {
+        StepDetailFragment.ButtonClickListener {
 
     private static final String TAG = RecipeDetailActivity.class.getSimpleName();
 
@@ -60,12 +60,6 @@ public class RecipeDetailActivity
             }
         }
 
-        if (savedInstanceState != null) {
-            clickedItemIndex = savedInstanceState.getInt("Saved_Step_Index");
-        } else {
-            clickedItemIndex = 0;
-        }
-
         // Going to pass that bundle from the MainListActivity right to recipeDetailFragment
         recipeDetailFragment.setArguments(currentRecipeBundle);
 
@@ -78,20 +72,21 @@ public class RecipeDetailActivity
         if (findViewById(R.id.divider1) != null) {
             // divider1 will only exist in the two-pane case
             mTwoPane = true;
-            Log.d(TAG, "onCreate: in two pane mode");
-            if (savedInstanceState == null) {
-
-                StepDetailFragment stepDetailFragment = new StepDetailFragment();
-                FragmentManager sFragmentManager = getSupportFragmentManager();
-
-                // Setup bundle for fragment argument
-                stepDetailFragment.setArguments(currentRecipeBundle);
-
-                // Add the fragment to its container using a transaction
-                sFragmentManager.beginTransaction()
-                        .replace(R.id.step_detail_container, stepDetailFragment)
-                        .commit();
+            if (savedInstanceState != null) {
+                clickedItemIndex = savedInstanceState.getInt("Saved_Step_Index");
+                currentRecipeBundle.putInt("Step_Index", clickedItemIndex);
             }
+            Log.d(TAG, "onCreate: in two pane mode clickedItemIndex " + clickedItemIndex);
+            StepDetailFragment stepDetailFragment = new StepDetailFragment();
+            FragmentManager sFragmentManager = getSupportFragmentManager();
+
+            // Setup bundle for fragment argument
+            stepDetailFragment.setArguments(currentRecipeBundle);
+
+            // Add the fragment to its container using a transaction
+            sFragmentManager.beginTransaction()
+                    .replace(R.id.step_detail_container, stepDetailFragment)
+                    .commit();
         }
     }
 
@@ -135,6 +130,7 @@ public class RecipeDetailActivity
         // always reference specific Step by the "clickedItemIndex" which is automatically generated (0-n)
         //  and not the "stepId", which is supplied by API and may skip integers
 
+        clickedItemIndex = targetStepIndex;
         // targetStepIndex is coming from the callback from StepDetailFragment nav buttons
         currentRecipeBundle.putInt("Step_Index", targetStepIndex);
 
@@ -152,6 +148,7 @@ public class RecipeDetailActivity
         super.onSaveInstanceState(currentState);
         currentState.putParcelableArrayList("Current_Recipe", recipe);
         currentState.putParcelable("recycler_layout", savedRecyclerLayoutState);
+        currentState.putInt("Saved_Step_Index", clickedItemIndex);
     }
 
     @Override
@@ -160,6 +157,7 @@ public class RecipeDetailActivity
         if (savedInstanceState != null) {
             recipe = savedInstanceState.getParcelableArrayList("Current_Recipe");
             savedRecyclerLayoutState = savedInstanceState.getParcelable("recycler_layout");
+            clickedItemIndex = savedInstanceState.getInt("Saved_Step_Index");
         }
     }
 

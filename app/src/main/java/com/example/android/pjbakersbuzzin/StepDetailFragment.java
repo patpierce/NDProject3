@@ -73,7 +73,6 @@ public class StepDetailFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle savedInstanceState) {
-//        super.onCreateView(inflater, viewGroup, savedInstanceState);
         // always reference specific Step by the "clickedItemIndex" which is automatically generated (0-n)
         //  and not the "stepId", which is supplied by API and may skip integers
 

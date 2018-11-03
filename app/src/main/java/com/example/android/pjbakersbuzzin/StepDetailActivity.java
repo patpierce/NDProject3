@@ -82,6 +82,7 @@ public class StepDetailActivity extends AppCompatActivity
         //  and not by the "stepId", which is supplied by API and may skip integers
 
         clickedItemIndex = targetStepIndex;
+        // targetStepIndex is coming from the callback from StepDetailFragment nav buttons
         currentRecipeBundle.putInt("Step_Index", targetStepIndex);
 
         // Add bundle as fragment argument, then start fragment in container
