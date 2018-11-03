@@ -1,10 +1,8 @@
 package com.example.android.pjbakersbuzzin;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -75,101 +73,125 @@ public class StepDetailFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle savedInstanceState) {
+//        super.onCreateView(inflater, viewGroup, savedInstanceState);
+        // always reference specific Step by the "clickedItemIndex" which is automatically generated (0-n)
+        //  and not the "stepId", which is supplied by API and may skip integers
 
         Log.d(TAG, "onCreateView: begin");
         if (savedInstanceState != null) {
             Log.d(TAG, "onCreateView: savedInstanceState yes");
             steps = savedInstanceState.getParcelableArrayList("Saved_Steps_Bundle");
             clickedItemIndex = savedInstanceState.getInt("Saved_Step_Index");
-        }
-
-        Bundle arguments = getArguments();
-        if (steps == null) {
+            Log.d(TAG, "onCreateView: getting steps from savedInstanceState " + steps.size());
+            Log.d(TAG, "onCreateView: getting clickedItemIndex from savedInstanceState " + clickedItemIndex);
+//            setListIndex(clickedItemIndex);
+        } else {
+            Log.d(TAG, "onCreateView: savedInstanceState null");
+            Bundle arguments = getArguments();
             if (arguments != null) {
-                if (arguments.containsKey("Current_Recipe")) {
-                    recipe = getArguments().getParcelableArrayList("Current_Recipe");
-                    steps = recipe.get(0).getSteps();
-                    Log.d(TAG, "onCreateView: getting steps from Current_Recipe " + steps.size());
+                if (steps == null) {
+                    if (arguments.containsKey("Current_Recipe")) {
+                        recipe = getArguments().getParcelableArrayList("Current_Recipe");
+                        steps = recipe.get(0).getSteps();
+                        Log.d(TAG, "onCreateView: getting steps from Current_Recipe " + steps.size());
+                    }
                 }
-                if (arguments.containsKey("Step_Index")) {
-                    clickedItemIndex = arguments.getInt("Step_Index");
-                    Log.d(TAG, "onCreateView: getting clickedItemIndex from Step_Index " + clickedItemIndex);
-                }
-                else
-                    clickedItemIndex = 0;
-            }
-        }
-
-        stepId = steps.get(clickedItemIndex).getId();
-        shortDescription = steps.get(clickedItemIndex).getShortDescription();
-        description = steps.get(clickedItemIndex).getDescription();
-        videoUrl = steps.get(clickedItemIndex).getVideoURL();
-        thumbnailURL = steps.get(clickedItemIndex).getThumbnailURL();
-
-        View stepView = inflater.inflate(R.layout.fragment_step_detail, viewGroup, false);
-        TextView stepTitleView = stepView.findViewById(R.id.tv_step_short_description);
-        TextView stepInstructionsView = stepView.findViewById(R.id.tv_step_description);
-
-        stepTitleString = (stepId < 1) ? "" : "Step " + stepId.toString() + ": ";
-        stepTitleString = stepTitleString + shortDescription;
-        stepTitleView.setText(stepTitleString);
-
-        if (!description.equals(shortDescription)) {
-            stepInstructionsView.setText(description);
-        }
-
-        exoPlaceholderView = stepView.findViewById(R.id.exo_placeholder_view);
-        exoPlayerView = stepView.findViewById(R.id.exo_player_view);
-        exoPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
-//        exoPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH);
-
-        if (!videoUrl.equals("")) {
-            Log.d(TAG, "onCreateView: videoUrl " + videoUrl);
-            exoPlaceholderView.setVisibility(View.INVISIBLE);
-            exoPlayerView.setVisibility(View.VISIBLE);
-            initializePlayer(Uri.parse(videoUrl));
-        }
-        else {
-            Log.d(TAG, "onCreateView: videoUrl empty");
-            exoPlayerView.setVisibility(View.INVISIBLE);
-            exoPlaceholderView.setVisibility(View.VISIBLE);
-            exoPlayer = null;
-//            exoPlayerView.setForeground(ContextCompat.getDrawable(getContext(), R.drawable.vg_silicone_spatula));
-//            exoPlayerView.setLayoutParams(new LinearLayout.LayoutParams(300, 300));
-        }
-
-        Button prevButtonView = stepView.findViewById(R.id.previous_button);
-        prevButtonView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (clickedItemIndex > 0) {
-                    Integer targetStepIndex = clickedItemIndex - 1;
-                    if (exoPlayer != null){ exoPlayer.stop(); }
-                    navClickListener.onButtonClick(targetStepIndex);
+                if (clickedItemIndex != null) {
+                    // we got it from savedInstanceState
                 }
                 else {
-                    Toast.makeText(getActivity(),
-                            "No previous steps", Toast.LENGTH_SHORT).show();
+                    if (arguments.containsKey("Step_Index")) {
+                        clickedItemIndex = arguments.getInt("Step_Index");
+                        Log.d(TAG, "onCreateView: getting clickedItemIndex from Step_Index " + clickedItemIndex);
+                    } else {
+                        clickedItemIndex = 0;
+                    }
                 }
             }
-        });
+            stepId = steps.get(clickedItemIndex).getId();
+            shortDescription = steps.get(clickedItemIndex).getShortDescription();
+            description = steps.get(clickedItemIndex).getDescription();
+            videoUrl = steps.get(clickedItemIndex).getVideoURL();
+            thumbnailURL = steps.get(clickedItemIndex).getThumbnailURL();
 
-        Button nextButtonView = stepView.findViewById(R.id.next_button);
-        nextButtonView.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                if (clickedItemIndex < (steps.size() - 1)) {
-                    Integer targetStepIndex = clickedItemIndex + 1;
-                    if (exoPlayer != null){ exoPlayer.stop(); }
-                    navClickListener.onButtonClick(targetStepIndex);
-                }
-                else {
-                    Toast.makeText(getActivity(),
-                            "No more steps", Toast.LENGTH_SHORT).show();
-                }
+            final View stepView = inflater.inflate(R.layout.fragment_step_detail, viewGroup, false);
+            TextView stepTitleView = stepView.findViewById(R.id.tv_step_short_description);
+            TextView stepInstructionsView = stepView.findViewById(R.id.tv_step_description);
+
+            // This step building the text views is the only place we want to use "stepId"
+            stepTitleString = (stepId < 1) ? "" : "Step " + stepId.toString() + ": ";
+            stepTitleString = stepTitleString + shortDescription;
+            stepTitleView.setText(stepTitleString);
+
+            if (!description.equals(shortDescription)) {
+                stepInstructionsView.setText(description);
             }
-        });
 
-        return stepView;
+            exoPlaceholderView = stepView.findViewById(R.id.exo_placeholder_view);
+            exoPlayerView = stepView.findViewById(R.id.exo_player_view);
+            exoPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
+
+            stepView.post(new Runnable() {
+                              @Override
+                              public void run() {
+                                  int viewHeight = stepView.getHeight(); // for instance
+                                  int viewWidth = stepView.getWidth(); // for instance
+                                  Log.d(TAG, "run: viewHeight" + viewHeight);
+                                  Log.d(TAG, "run: viewWidth" + viewWidth);
+                              }
+                          }
+            );
+
+            if (!videoUrl.equals("")) {
+                Log.d(TAG, "onCreateView: videoUrl " + videoUrl);
+                exoPlaceholderView.setVisibility(View.GONE);
+                exoPlayerView.setVisibility(View.VISIBLE);
+                initializePlayer(Uri.parse(videoUrl));
+            }
+            else {
+                Log.d(TAG, "onCreateView: videoUrl empty");
+                exoPlayerView.setVisibility(View.GONE);
+                exoPlaceholderView.setVisibility(View.VISIBLE);
+                exoPlayer = null;
+            }
+
+            Button prevButtonView = stepView.findViewById(R.id.previous_button);
+            prevButtonView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (clickedItemIndex > 0) {
+                        Integer targetStepIndex = clickedItemIndex - 1;
+                        if (exoPlayer != null){ exoPlayer.stop(); }
+                        setListIndex(targetStepIndex);
+                        navClickListener.onButtonClick(targetStepIndex);
+                    }
+                    else {
+                        Toast.makeText(getActivity(),
+                                "No previous steps", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+            Button nextButtonView = stepView.findViewById(R.id.next_button);
+            nextButtonView.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
+                    if (clickedItemIndex < (steps.size() - 1)) {
+                        Integer targetStepIndex = clickedItemIndex + 1;
+                        if (exoPlayer != null){ exoPlayer.stop(); }
+                        setListIndex(targetStepIndex);
+                        navClickListener.onButtonClick(targetStepIndex);
+                    }
+                    else {
+                        Toast.makeText(getActivity(),
+                                "No more steps", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+            return stepView;
+        }
+        return null;
+
     }
 
     public void setListIndex(int newindex) {
@@ -191,6 +213,7 @@ public class StepDetailFragment extends Fragment {
             Uri uri = Uri.parse(videoUrl);
             MediaSource mediaSource = buildMediaSource(uri);
             exoPlayer.prepare(mediaSource, true, false);
+            exoPlayerView.hideController();
             exoPlayer.setPlayWhenReady(true);
 
         }
@@ -242,26 +265,26 @@ public class StepDetailFragment extends Fragment {
         exoPlayer = null;
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        ConstraintLayout.LayoutParams params =
-                (ConstraintLayout.LayoutParams) exoPlayerView.getLayoutParams();
-
-        Log.d(TAG, "onConfigurationChanged: newConfig.orientation" + newConfig.orientation);
-        // Checking the orientation of the screen
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            //First Hide other objects (listview or recyclerview), better hide them using Gone.
-            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-            params.height = ViewGroup.LayoutParams.MATCH_PARENT;
-            exoPlayerView.setLayoutParams(params);
-        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            //unhide your objects here.
-            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-            params.height = 250;
-            exoPlayerView.setLayoutParams(params);
-        }
-    }
+//    @Override
+//    public void onConfigurationChanged(Configuration newConfig) {
+//        super.onConfigurationChanged(newConfig);
+//        ConstraintLayout.LayoutParams params =
+//                (ConstraintLayout.LayoutParams) exoPlayerView.getLayoutParams();
+//
+//        Log.d(TAG, "onConfigurationChanged: newConfig.orientation" + newConfig.orientation);
+//        // Checking the orientation of the screen
+//        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+//            //First Hide other objects (listview or recyclerview), better hide them using Gone.
+//            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+//            params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+//            exoPlayerView.setLayoutParams(params);
+//        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+//            //unhide your objects here.
+//            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+//            params.height = 250;
+//            exoPlayerView.setLayoutParams(params);
+//        }
+//    }
 
     @Override
     public void onSaveInstanceState(Bundle currentState) {

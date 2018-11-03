@@ -2,4 +2,8 @@
     <string name="app_name">PJ Baker\'s Buzzin\'</string>
     <string name="recipe_photo">Picture of Recipe, if available</string>
     <string name="error_message">Cannot load list of recipes.\nCheck internet connection.</string>
+    <string name="next_button_label">next</string>
+    <string name="prev_button_label">prev</string>
+    <string name="retry_button_label">retry</string>
+    <string name="about_menu_label">About</string>
 </resources>

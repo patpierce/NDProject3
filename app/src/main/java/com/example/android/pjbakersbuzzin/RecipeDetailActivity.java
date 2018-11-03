@@ -7,16 +7,26 @@ import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 
 import com.example.android.pjbakersbuzzin.adapters.StepListRecyclerAdapter;
 import com.example.android.pjbakersbuzzin.models.Recipe;
 
 import java.util.ArrayList;
 
+/**
+ * An activity representing a recipe detail screen, possibly with two panes.
+ * This activity is used  to load a master fragment recipe_detail_fragment
+ * The master fragment shows recipe details plus a step list recycler.
+ * On narrow width devices, only the master fragment is loaded,
+ * step_list_recycler is used to launch a step_detail_activity to host the step_detail_fragment.
+ * On tablet-size devices, this activity presents that master fragment side-by-side with
+ * the step_detail_fragment which is controlled by the recycler in the master fragment.
+ */
 public class RecipeDetailActivity
         extends AppCompatActivity
-        implements StepListRecyclerAdapter.ListItemClickListener
-        ,StepDetailFragment.ButtonClickListener {
+        implements StepListRecyclerAdapter.ListItemClickListener,
+                   StepDetailFragment.ButtonClickListener {
 
     private static final String TAG = RecipeDetailActivity.class.getSimpleName();
 
@@ -25,6 +35,7 @@ public class RecipeDetailActivity
 
     Bundle currentRecipeBundle;
     private ArrayList<Recipe> recipe;
+    private int clickedItemIndex;
     private boolean mTwoPane;
 
     RecipeDetailFragment recipeDetailFragment = new RecipeDetailFragment();
@@ -34,6 +45,7 @@ public class RecipeDetailActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
         context = getApplicationContext();
+        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent recipeDetailIntent = getIntent();
         currentRecipeBundle = recipeDetailIntent.getExtras();
@@ -46,6 +58,12 @@ public class RecipeDetailActivity
                 String recipeName = recipe.get(0).getName();
                 getSupportActionBar().setTitle(recipeName);
             }
+        }
+
+        if (savedInstanceState != null) {
+            clickedItemIndex = savedInstanceState.getInt("Saved_Step_Index");
+        } else {
+            clickedItemIndex = 0;
         }
 
         // Going to pass that bundle from the MainListActivity right to recipeDetailFragment
@@ -78,11 +96,20 @@ public class RecipeDetailActivity
     }
 
     @Override
-    public void onListItemClick(int clickedItemIndex) {
-//        Log.d(TAG, "onListItemClick: steps size " + steps.size());
-        Log.d(TAG, "onListItemClick: clickedItemIndex " + clickedItemIndex);
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-        // Setup bundle to pass to StepDetailActivity or StepDetailActivityFragment
+    @Override
+    public void onListItemClick(int clickedItemIndex) {
+        // always reference specific Step by the "clickedItemIndex" which is automatically generated (0-n)
+        //  and not the "stepId", which is supplied by API and may skip integers
+
+        // Setup bundle to pass to StepDetailActivity or StepDetailFragment
         currentRecipeBundle.putInt("Step_Index", clickedItemIndex);
 
         if (mTwoPane) {
@@ -105,6 +132,9 @@ public class RecipeDetailActivity
 
     @Override
     public void onButtonClick(Integer targetStepIndex) {
+        // always reference specific Step by the "clickedItemIndex" which is automatically generated (0-n)
+        //  and not the "stepId", which is supplied by API and may skip integers
+
         // targetStepIndex is coming from the callback from StepDetailFragment nav buttons
         currentRecipeBundle.putInt("Step_Index", targetStepIndex);
 
