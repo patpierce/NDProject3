@@ -2,7 +2,6 @@ package com.example.android.pjbakersbuzzin.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,10 +58,10 @@ public class StepListRecyclerAdapter
 
     @Override
     public void onBindViewHolder(StepsViewHolder holder, int position) {
-        Log.d(TAG, "onBindViewHolder: " + dataList.get(position).getShortDescription());
 
         Integer stepId = dataList.get(position).getId();
-        String stepNum = (stepId < 1) ? "" : "Step: " + stepId.toString();
+        String stepNum = (stepId < 1) ? "" :
+                context.getResources().getString(R.string.step_header) + " " + stepId.toString();
         String shortDescription = dataList.get(position).getShortDescription();
         String thumbnailUrl = dataList.get(position).getThumbnailURL();
 
@@ -92,9 +91,9 @@ public class StepListRecyclerAdapter
         private StepsViewHolder(View itemView) {
             super(itemView);
 
-            mStepNumberTextView = itemView.findViewById(R.id.tv_step_number);
-            mStepsShortDescriptionTextView = itemView.findViewById(R.id.tv_step_short_description);
-            mStepThumbnailImageView = itemView.findViewById(R.id.iv_step_thumbnail);
+            mStepNumberTextView = (TextView) itemView.findViewById(R.id.tv_step_number);
+            mStepsShortDescriptionTextView = (TextView) itemView.findViewById(R.id.tv_step_short_description);
+            mStepThumbnailImageView = (ImageView) itemView.findViewById(R.id.iv_step_thumbnail);
             itemView.setOnClickListener(this);
         }
 

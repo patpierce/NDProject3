@@ -1,11 +1,8 @@
 package com.example.android.pjbakersbuzzin.adapters;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -24,30 +21,9 @@ public class IngredientListRecyclerAdapter
     private static final String TAG = IngredientListRecyclerAdapter.class.getSimpleName();
 
     private List<Ingredient> dataList;
-    private Context context;
-    private final ListItemClickListener mIngredientOnClickListener;
 
-    /**
-     * The interface that receives onClick messages.
-     */
-    public interface ListItemClickListener {
-        void onListItemClick(Ingredient clickedItemIndex);
-    }
-
-    /**
-     * Constructor for IngredientListRecyclerAdapter that accepts
-     * the specification for the ListItemClickListener.
-     * <p>
-     *
-     * @param listener Listener for list item clicks
-     */
-    public IngredientListRecyclerAdapter(ListItemClickListener listener) {
-        mIngredientOnClickListener = listener;
-    }
-
-    public void setIngredientData(List<Ingredient> ingredientData, Context contextIn) {
+    public void setIngredientData(List<Ingredient> ingredientData) {
         dataList = ingredientData;
-        context = contextIn;
         notifyDataSetChanged();
     }
 
@@ -60,8 +36,6 @@ public class IngredientListRecyclerAdapter
 
     @Override
     public void onBindViewHolder(IngredientsViewHolder holder, int position) {
-        Log.d(TAG, "onBindViewHolder: " + dataList.get(position).getIngredient());
-
         Double quantity = dataList.get(position).getQuantity();
         String measure = dataList.get(position).getMeasure();
         String ingredient = dataList.get(position).getIngredient();
@@ -73,16 +47,14 @@ public class IngredientListRecyclerAdapter
 
     public class IngredientsViewHolder
             extends RecyclerView.ViewHolder {
-//            implements OnClickListener {
 
         private final TextView mIngredientNameTextView;
         private final TextView mIngredientQuantityTextView;
         private final TextView mIngredientMeasureTextView;
 
         /**
-         * Constructor for our ViewHolder. Within this constructor, we get a reference to our
-         * TextViews and set an onClickListener to listen for clicks. Those will be handled in the
-         * onClick method below.
+         * Constructor for our ViewHolder.
+         * Within this constructor, we get a reference to our TextViews.
          *
          * @param itemView The View that you inflated in
          *                 {@link IngredientListRecyclerAdapter#onCreateViewHolder(ViewGroup, int)}
@@ -90,16 +62,11 @@ public class IngredientListRecyclerAdapter
         private IngredientsViewHolder(View itemView) {
             super(itemView);
 
-            mIngredientNameTextView = itemView.findViewById(R.id.tv_ingredient_name);
-            mIngredientQuantityTextView = itemView.findViewById(R.id.tv_ingredient_value);
-            mIngredientMeasureTextView = itemView.findViewById(R.id.tv_ingredient_measure);
-            // Call setOnClickListener on the View passed into the constructor (use 'this' as the OnClickListener)
-//            itemView.setOnClickListener(this);
+            mIngredientNameTextView = (TextView) itemView.findViewById(R.id.tv_ingredient_name);
+            mIngredientQuantityTextView = (TextView) itemView.findViewById(R.id.tv_ingredient_value);
+            mIngredientMeasureTextView = (TextView) itemView.findViewById(R.id.tv_ingredient_measure);
         }
 
-//        @Override
-//        public void onClick(View v) {
-//        }
     }
 
     @Override

@@ -1,12 +1,10 @@
 package com.example.android.pjbakersbuzzin;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.example.android.pjbakersbuzzin.adapters.StepListRecyclerAdapter;
@@ -31,7 +29,6 @@ public class RecipeDetailActivity
     private static final String TAG = RecipeDetailActivity.class.getSimpleName();
 
     private Parcelable savedRecyclerLayoutState;
-    private Context context;
 
     Bundle currentRecipeBundle;
     private ArrayList<Recipe> recipe;
@@ -44,7 +41,6 @@ public class RecipeDetailActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
-        context = getApplicationContext();
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent recipeDetailIntent = getIntent();
@@ -76,7 +72,6 @@ public class RecipeDetailActivity
                 clickedItemIndex = savedInstanceState.getInt("Saved_Step_Index");
                 currentRecipeBundle.putInt("Step_Index", clickedItemIndex);
             }
-            Log.d(TAG, "onCreate: in two pane mode clickedItemIndex " + clickedItemIndex);
             StepDetailFragment stepDetailFragment = new StepDetailFragment();
             FragmentManager sFragmentManager = getSupportFragmentManager();
 
@@ -122,7 +117,6 @@ public class RecipeDetailActivity
             intent.putExtras(currentRecipeBundle);
             startActivity(intent);
         }
-
     }
 
     @Override

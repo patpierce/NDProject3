@@ -2,7 +2,6 @@ package com.example.android.pjbakersbuzzin.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,10 +58,11 @@ public class MainListRecyclerAdapter
 
     @Override
     public void onBindViewHolder(RecipeListViewHolder holder, int position) {
-        Log.d(TAG, "onBindViewHolder: " + dataList.get(position).getName());
-
         String recipeName = dataList.get(position).getName();
-        String numServings = " Serves: " + dataList.get(position).getServings().toString();
+        String servesHeader =
+                holder.itemView.getContext().getResources().getString(R.string.serves_header);
+        String numServings =
+                " " + servesHeader + ": " + dataList.get(position).getServings().toString();
         String imageUrl = dataList.get(position).getImage();
 
         holder.recipeNameView.setText(recipeName);
@@ -91,9 +91,9 @@ public class MainListRecyclerAdapter
         private RecipeListViewHolder(View itemView) {
             super(itemView);
 
-            recipeNameView = itemView.findViewById(R.id.tv_content);
-            numServingsView = itemView.findViewById(R.id.tv_num_servings);
-            recipeImageView = itemView.findViewById(R.id.iv_recipe_image);
+            recipeNameView = (TextView) itemView.findViewById(R.id.tv_content);
+            numServingsView = (TextView) itemView.findViewById(R.id.tv_num_servings);
+            recipeImageView = (ImageView) itemView.findViewById(R.id.iv_recipe_image);
             itemView.setOnClickListener(this);
         }
 

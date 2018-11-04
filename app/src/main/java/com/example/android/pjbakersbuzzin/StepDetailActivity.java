@@ -1,20 +1,16 @@
 package com.example.android.pjbakersbuzzin;
 
-import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.android.pjbakersbuzzin.models.Recipe;
@@ -34,9 +30,8 @@ public class StepDetailActivity extends AppCompatActivity
     private static final String TAG = StepDetailActivity.class.getSimpleName();
     Bundle currentRecipeBundle;
     private ArrayList<Recipe> recipe;
-
+    private Integer clickedItemIndex;
     private String recipeName;
-    private int clickedItemIndex;
     private Context context;
 
     @Override
@@ -46,26 +41,33 @@ public class StepDetailActivity extends AppCompatActivity
         context = getApplicationContext();
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Intent StepDetailIntent = getIntent();
-        currentRecipeBundle = StepDetailIntent.getExtras();
-
-        if (currentRecipeBundle != null) {
-            if (currentRecipeBundle.containsKey("Current_Recipe")) {
-                recipe = currentRecipeBundle.getParcelableArrayList("Current_Recipe");
-                String recipeName = recipe.get(0).getName();
-                getSupportActionBar().setTitle(recipeName);
+        if (savedInstanceState != null) {
+            recipe = savedInstanceState.getParcelableArrayList("Current_Recipe");
+            clickedItemIndex = savedInstanceState.getInt("Saved_Step_Index");
+        } else {
+            Intent StepDetailIntent = getIntent();
+            currentRecipeBundle = StepDetailIntent.getExtras();
+            if (currentRecipeBundle != null) {
+                if (recipe == null) {
+                    if (currentRecipeBundle.containsKey("Current_Recipe")) {
+                        recipe = currentRecipeBundle.getParcelableArrayList("Current_Recipe");
+                    }
+                }
+            }
+            if (clickedItemIndex == null) {
+                // we didnt get it from savedInstanceState
+                if (currentRecipeBundle.containsKey("Step_Index")) {
+                    clickedItemIndex = currentRecipeBundle.getInt("Step_Index");
+                } else {
+                    clickedItemIndex = 0;
+                }
             }
         }
 
-        if (savedInstanceState != null) {
-            clickedItemIndex = savedInstanceState.getInt("Saved_Step_Index");
-        } else {
-            clickedItemIndex = 0;
-        }
+        recipeName = recipe.get(0).getName();
+        getSupportActionBar().setTitle(recipeName);
+
         currentRecipeBundle.putInt("Step_Index", clickedItemIndex);
-
-        Log.d(TAG, "sda.onCreate: recipeName " + recipeName);
-
         StepDetailFragment stepDetailFragment = new StepDetailFragment();
         stepDetailFragment.setArguments(currentRecipeBundle);
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -100,7 +102,6 @@ public class StepDetailActivity extends AppCompatActivity
         sFragmentManager.beginTransaction()
                 .replace(R.id.step_detail_container, stepDetailFragment)
                 .commit();
-
     }
 
     @Override
@@ -123,13 +124,13 @@ public class StepDetailActivity extends AppCompatActivity
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        PlayerView exoPlayerView = findViewById(R.id.exo_player_view);
+        PlayerView exoPlayerView = (PlayerView) findViewById(R.id.exo_player_view);
 
+        // if exoPlayerView isn't visible, there is no video, so we can skip the fullscreen mode
         if (exoPlayerView.getVisibility() == View.VISIBLE) {
-
-            TextView stepTitleView = findViewById(R.id.tv_step_short_description);
-            TextView stepInstructionsView = findViewById(R.id.tv_step_description);
-            LinearLayout buttonsRowLayout = findViewById(R.id.ll_buttons_row);
+            TextView stepTitleView = (TextView) findViewById(R.id.tv_step_short_description);
+            TextView stepInstructionsView = (TextView) findViewById(R.id.tv_step_description);
+            LinearLayout buttonsRowLayout = (LinearLayout) findViewById(R.id.ll_buttons_row);
             View decorView = getWindow().getDecorView();
             LinearLayout.LayoutParams lLparams =
                     (LinearLayout.LayoutParams) exoPlayerView.getLayoutParams();
@@ -148,13 +149,13 @@ public class StepDetailActivity extends AppCompatActivity
                         WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
                 // set video window match_parent w and h
-                lLparams.width = lLparams.MATCH_PARENT;
-                lLparams.height = lLparams.MATCH_PARENT;
+                lLparams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                lLparams.height = ViewGroup.LayoutParams.MATCH_PARENT;
                 exoPlayerView.setLayoutParams(lLparams);
             }
             else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                // set video window back to using "layout_weight" for height
-                lLparams.width = lLparams.MATCH_PARENT;
+                // set video window back to 0dp h for using "layout_weight" for height
+                lLparams.width = ViewGroup.LayoutParams.MATCH_PARENT;
                 lLparams.height = 0;
                 exoPlayerView.setLayoutParams(lLparams);
 
@@ -165,9 +166,7 @@ public class StepDetailActivity extends AppCompatActivity
                 stepInstructionsView.setVisibility(View.VISIBLE);
                 buttonsRowLayout.setVisibility(View.VISIBLE);
             }
-
         }
-
     }
 
 }

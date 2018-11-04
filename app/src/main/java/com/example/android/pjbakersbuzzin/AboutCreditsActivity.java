@@ -27,7 +27,7 @@ public class AboutCreditsActivity extends AppCompatActivity {
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.credits);
-        TextView textView = findViewById(R.id.tv_about);
+        TextView textView = (TextView) findViewById(R.id.tv_about);
 
         BufferedReader bufferedReader = null;
         try {
@@ -41,7 +41,7 @@ public class AboutCreditsActivity extends AppCompatActivity {
                 text.append('\n');
             }
         } catch (IOException e) {
-            Toast.makeText(getApplicationContext(), "Error reading file!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.credits_file_error_message, Toast.LENGTH_LONG).show();
             e.printStackTrace();
         } finally {
             if (bufferedReader != null) {

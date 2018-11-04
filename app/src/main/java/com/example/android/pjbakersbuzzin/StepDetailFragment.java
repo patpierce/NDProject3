@@ -1,17 +1,14 @@
 package com.example.android.pjbakersbuzzin;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,19 +34,10 @@ public class StepDetailFragment extends Fragment {
 
     private static final String TAG = StepDetailFragment.class.getSimpleName();
 
-    // Strings to store information about the list of steps and list index
-    private ArrayList<Recipe> recipe;
     private ArrayList<Step> steps;
     private Integer clickedItemIndex;
-    private Integer stepId;
-    private String videoUrl;
-    private String shortDescription;
-    private String description;
-    private String thumbnailURL;
-    private String stepTitleString;
 
     private PlayerView exoPlayerView;
-    private ImageView exoPlaceholderView;
     private SimpleExoPlayer exoPlayer;
 
     public StepDetailFragment() {
@@ -78,49 +66,40 @@ public class StepDetailFragment extends Fragment {
         // always reference specific Step by the "clickedItemIndex" which is automatically generated (0-n)
         //  and not the "stepId", which is supplied by API and may skip integers
 
-        Log.d(TAG, "onCreateView: begin");
         if (savedInstanceState != null) {
-            Log.d(TAG, "onCreateView: savedInstanceState yes");
             steps = savedInstanceState.getParcelableArrayList("Saved_Steps_Bundle");
             clickedItemIndex = savedInstanceState.getInt("Saved_Step_Index");
-            Log.d(TAG, "onCreateView: getting steps from savedInstanceState " + steps.size());
-            Log.d(TAG, "onCreateView: getting clickedItemIndex from savedInstanceState " + clickedItemIndex);
-//            setListIndex(clickedItemIndex);
         } else {
-            Log.d(TAG, "onCreateView: savedInstanceState null");
             Bundle arguments = getArguments();
             if (arguments != null) {
                 if (steps == null) {
                     if (arguments.containsKey("Current_Recipe")) {
-                        recipe = getArguments().getParcelableArrayList("Current_Recipe");
+                        ArrayList<Recipe> recipe = getArguments().getParcelableArrayList("Current_Recipe");
                         steps = recipe.get(0).getSteps();
-                        Log.d(TAG, "onCreateView: getting steps from Current_Recipe " + steps.size());
                     }
                 }
-                if (clickedItemIndex != null) {
-                    // we got it from savedInstanceState
-                }
-                else {
+                if (clickedItemIndex == null) {
+                    // we didnt get it from savedInstanceState
                     if (arguments.containsKey("Step_Index")) {
                         clickedItemIndex = arguments.getInt("Step_Index");
-                        Log.d(TAG, "onCreateView: getting clickedItemIndex from Step_Index " + clickedItemIndex);
                     } else {
                         clickedItemIndex = 0;
                     }
                 }
             }
-            stepId = steps.get(clickedItemIndex).getId();
-            shortDescription = steps.get(clickedItemIndex).getShortDescription();
-            description = steps.get(clickedItemIndex).getDescription();
-            videoUrl = steps.get(clickedItemIndex).getVideoURL();
-            thumbnailURL = steps.get(clickedItemIndex).getThumbnailURL();
+            Integer stepId = steps.get(clickedItemIndex).getId();
+            String shortDescription = steps.get(clickedItemIndex).getShortDescription();
+            String description = steps.get(clickedItemIndex).getDescription();
+            String videoUrl = steps.get(clickedItemIndex).getVideoURL();
+            String thumbnailURL = steps.get(clickedItemIndex).getThumbnailURL();
 
             final View stepView = inflater.inflate(R.layout.fragment_step_detail, viewGroup, false);
-            TextView stepTitleView = stepView.findViewById(R.id.tv_step_short_description);
-            TextView stepInstructionsView = stepView.findViewById(R.id.tv_step_description);
+            TextView stepTitleView = (TextView) stepView.findViewById(R.id.tv_step_short_description);
+            TextView stepInstructionsView = (TextView) stepView.findViewById(R.id.tv_step_description);
 
-            // This step building the text views is the only place we want to use "stepId"
-            stepTitleString = (stepId < 1) ? "" : "Step " + stepId.toString() + ": ";
+            // Building the text views is the only place to use "stepId" as retrieved from API
+            String stepTitleString = (stepId < 1) ? "" : getString(R.string.step_header) +
+                    " " + stepId.toString() + ": ";
             stepTitleString = stepTitleString + shortDescription;
             stepTitleView.setText(stepTitleString);
 
@@ -128,35 +107,22 @@ public class StepDetailFragment extends Fragment {
                 stepInstructionsView.setText(description);
             }
 
-            exoPlaceholderView = stepView.findViewById(R.id.exo_placeholder_view);
-            exoPlayerView = stepView.findViewById(R.id.exo_player_view);
+            ImageView exoPlaceholderView = (ImageView) stepView.findViewById(R.id.exo_placeholder_view);
+            exoPlayerView = (PlayerView) stepView.findViewById(R.id.exo_player_view);
             exoPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
 
-            stepView.post(new Runnable() {
-                              @Override
-                              public void run() {
-                                  int viewHeight = stepView.getHeight(); // for instance
-                                  int viewWidth = stepView.getWidth(); // for instance
-                                  Log.d(TAG, "run: viewHeight" + viewHeight);
-                                  Log.d(TAG, "run: viewWidth" + viewWidth);
-                              }
-                          }
-            );
-
             if (!videoUrl.equals("")) {
-                Log.d(TAG, "onCreateView: videoUrl " + videoUrl);
                 exoPlaceholderView.setVisibility(View.GONE);
                 exoPlayerView.setVisibility(View.VISIBLE);
                 initializePlayer(Uri.parse(videoUrl));
             }
             else {
-                Log.d(TAG, "onCreateView: videoUrl empty");
                 exoPlayerView.setVisibility(View.GONE);
                 exoPlaceholderView.setVisibility(View.VISIBLE);
                 exoPlayer = null;
             }
 
-            Button prevButtonView = stepView.findViewById(R.id.previous_button);
+            Button prevButtonView = (Button) stepView.findViewById(R.id.previous_button);
             prevButtonView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -168,12 +134,12 @@ public class StepDetailFragment extends Fragment {
                     }
                     else {
                         Toast.makeText(getActivity(),
-                                "No previous steps", Toast.LENGTH_SHORT).show();
+                                R.string.begin_of_steps_message, Toast.LENGTH_SHORT).show();
                     }
                 }
             });
 
-            Button nextButtonView = stepView.findViewById(R.id.next_button);
+            Button nextButtonView = (Button) stepView.findViewById(R.id.next_button);
             nextButtonView.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
                     if (clickedItemIndex < (steps.size() - 1)) {
@@ -184,13 +150,14 @@ public class StepDetailFragment extends Fragment {
                     }
                     else {
                         Toast.makeText(getActivity(),
-                                "No more steps", Toast.LENGTH_SHORT).show();
+                                R.string.end_of_steps_message, Toast.LENGTH_SHORT).show();
                     }
                 }
             });
 
             return stepView;
         }
+
         return null;
 
     }
@@ -201,8 +168,6 @@ public class StepDetailFragment extends Fragment {
 
     private void initializePlayer(Uri mediaUri) {
         if (exoPlayer == null) {
-            Log.d(TAG, "initializePlayer: url " + mediaUri.toString());
-
             exoPlayer = ExoPlayerFactory.newSimpleInstance(
                     new DefaultRenderersFactory(getContext()),
                     new DefaultTrackSelector(),
@@ -211,24 +176,21 @@ public class StepDetailFragment extends Fragment {
             exoPlayerView.setPlayer(exoPlayer);
             exoPlayer.seekTo(0);
 
-            Uri uri = Uri.parse(videoUrl);
-            MediaSource mediaSource = buildMediaSource(uri);
+            MediaSource mediaSource = buildMediaSource(mediaUri);
             exoPlayer.prepare(mediaSource, true, false);
             exoPlayerView.hideController();
             exoPlayer.setPlayWhenReady(true);
-
         }
     }
 
     private MediaSource buildMediaSource(Uri uri) {
-
         Context context = getContext();
         assert context != null;
-        // Measures bandwidth during playback. Can be null if not required.
+        // Measures bandwidth during playback.
         DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
         // Produces DataSource instances through which media data is loaded.
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(context,
-                Util.getUserAgent(context, "Bakers Buzzin"), bandwidthMeter);
+                Util.getUserAgent(context, getString(R.string.app_name)), bandwidthMeter);
         // Prepare the player with the source.
         return new ExtractorMediaSource.
                 Factory(dataSourceFactory).createMediaSource(uri);

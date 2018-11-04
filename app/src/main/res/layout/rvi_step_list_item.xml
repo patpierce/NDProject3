@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ll_step_list_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:background="@android:drawable/editbox_background" >
+    android:background="@android:drawable/editbox_background">
 
     <LinearLayout
         android:id="@+id/ll_step_text"
@@ -13,7 +14,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:padding="20dp"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/tv_step_number"
@@ -22,7 +23,7 @@
             android:gravity="center_vertical"
             android:textSize="12sp"
             android:textAppearance="?attr/textAppearanceListItem"
-            tools:text="Step: 42" />
+            tools:text="Step: 42"/>
 
         <TextView
             android:id="@+id/tv_step_short_description"
@@ -31,7 +32,7 @@
             android:gravity="center_vertical"
             android:textSize="16sp"
             android:textAppearance="?attr/textAppearanceListItem"
-            tools:text="Stir something vigorously forever." />
+            tools:text="Stir something vigorously forever."/>
 
     </LinearLayout>
 
@@ -43,6 +44,8 @@
         android:layout_margin="10dp"
         android:layout_gravity="center"
         android:layout_weight="1"
-        android:scaleType="fitEnd" />
+        android:contentDescription="@string/step_thumbnail_description"
+        android:scaleType="fitEnd"
+        android:tint="#01d277"/>
 
 </LinearLayout>

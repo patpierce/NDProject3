@@ -10,31 +10,28 @@
         android:id="@+id/tv_ingredient_value"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:text="17"
         android:gravity="end"
         android:textAlignment="textEnd"
         android:padding="2dp"
         android:textSize="14sp"
-        tools:text="42" />
+        tools:text="42"/>
 
     <TextView
         android:id="@+id/tv_ingredient_measure"
         android:layout_width="60dp"
         android:layout_height="wrap_content"
-        android:text="bottles"
         android:gravity="center_vertical"
         android:padding="2dp"
         android:textSize="14sp"
-        tools:text="tons" />
+        tools:text="tons"/>
 
     <TextView
         android:id="@+id/tv_ingredient_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="rubbing alcohol"
         android:gravity="center_vertical"
         android:padding="2dp"
         android:textSize="14sp"
-        tools:text="butter" />
+        tools:text="butter"/>
 
 </LinearLayout>

@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -39,7 +38,6 @@ public class MainListActivity
     private MainListRecyclerAdapter adapter;
     private RecyclerView recyclerView;
     private LinearLayout mErrorMessageDisplay;
-    private Button mRetryButton;
     private ProgressBar mLoadingIndicator;
     private Context context;
     private ArrayList<Recipe> recipes;
@@ -51,12 +49,12 @@ public class MainListActivity
         setContentView(R.layout.activity_main_list);
 
         // "progress bar" circle
-        mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
+        mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
         mLoadingIndicator.setVisibility(View.VISIBLE);
 
         // Layout to display error if recipes cant be retrieved, hidden if no errors
-        mErrorMessageDisplay = findViewById(R.id.ll_error_message_display);
-        mRetryButton = findViewById(R.id.retry_button);
+        mErrorMessageDisplay = (LinearLayout) findViewById(R.id.ll_error_message_display);
+        Button mRetryButton = (Button) findViewById(R.id.retry_button);
         mRetryButton.setOnClickListener(
                 new OnClickListener() {
                     public void onClick(View v) {
@@ -74,16 +72,16 @@ public class MainListActivity
         // (it seems to be too small by the height of the status bar),
         // but we assume screenWidthDp is reliable.
         int screenWidthDp = config.screenWidthDp;
-        Log.d(TAG, "screenWidthDp: " + screenWidthDp);
+        // Log.d(TAG, "screenWidthDp: " + screenWidthDp);
         int screenWidthPx = (int) (screenWidthDp * dens);
-        Log.d(TAG, "screenWidthPx: " + screenWidthPx);
+        // Log.d(TAG, "screenWidthPx: " + screenWidthPx);
         int itemWidthPx = (int) (resources.getDimension(R.dimen.recipe_card_width));
         int numberOfColumns = (screenWidthPx / itemWidthPx);
         // Log.d(TAG, "itemWidthPx: " + itemWidthPx);
         // Log.d(TAG, "numberOfColumns: " + numberOfColumns);
 
         // Setup RecyclerView for Recipes
-        recyclerView = findViewById(R.id.rv_main_list);
+        recyclerView = (RecyclerView) findViewById(R.id.rv_main_list);
         GridLayoutManager layoutManager = new GridLayoutManager(this, numberOfColumns);
         final MainListRecyclerAdapter adapter = new MainListRecyclerAdapter(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -102,8 +100,6 @@ public class MainListActivity
                                        Response<ArrayList<Recipe>> response) {
                     Integer statusCode = response.code();
                     recipes = response.body();
-                    // Log.d(TAG, "onResponse: from retrofit web call statusCode " + statusCode);
-                    // Log.d(TAG, "onResponse: from retrofit web call recipes.size " + recipes.size());
                     mLoadingIndicator.setVisibility(View.INVISIBLE);
                     mErrorMessageDisplay.setVisibility(View.INVISIBLE);
                     recyclerView.setVisibility(View.VISIBLE);
@@ -116,7 +112,7 @@ public class MainListActivity
                     recyclerView.setVisibility(View.INVISIBLE);
                     mErrorMessageDisplay.setVisibility(View.VISIBLE);
                     Toast.makeText(MainListActivity.this,
-                            "Something went wrong...Please try later!", Toast.LENGTH_SHORT).show();
+                            R.string.network_call_error_toast_message, Toast.LENGTH_SHORT).show();
                 }
             });
         }
