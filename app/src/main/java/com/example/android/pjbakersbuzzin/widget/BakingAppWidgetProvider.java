@@ -20,7 +20,7 @@ public class BakingAppWidgetProvider extends AppWidgetProvider {
 
     static ArrayList<String> ingredientsList = new ArrayList<>();
 
-    static void updateAppWidget(Context context,
+    private static void updateAppWidget(Context context,
                                 AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
         // Construct the RemoteViews object
@@ -52,7 +52,7 @@ public class BakingAppWidgetProvider extends AppWidgetProvider {
     }
 
     //had to make a static version of the above method, onReceive below did not like onUpdate
-    public static void onUpdateWidgets(Context context,
+    private static void onUpdateWidgets(Context context,
                                        AppWidgetManager appWidgetManager,
                                        int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them

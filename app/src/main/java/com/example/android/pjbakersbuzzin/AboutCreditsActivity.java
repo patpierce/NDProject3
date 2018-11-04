@@ -17,7 +17,7 @@ import java.io.InputStreamReader;
 public class AboutCreditsActivity extends AppCompatActivity {
 
     private static final String TAG = AboutCreditsActivity.class.getSimpleName();
-    private StringBuilder text = new StringBuilder();
+    final private StringBuilder text = new StringBuilder();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

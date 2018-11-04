@@ -1,9 +1,9 @@
 package com.example.android.pjbakersbuzzin;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -35,11 +35,10 @@ public class MainListActivity
 
     private static final String TAG = MainListActivity.class.getSimpleName();
 
-    private MainListRecyclerAdapter adapter;
+//    private MainListRecyclerAdapter adapter;
     private RecyclerView recyclerView;
     private LinearLayout mErrorMessageDisplay;
     private ProgressBar mLoadingIndicator;
-    private Context context;
     private ArrayList<Recipe> recipes;
 
 
@@ -96,18 +95,18 @@ public class MainListActivity
             // Start Retrofit api call (async with enqueue)
             call.enqueue(new Callback<ArrayList<Recipe>>() {
                 @Override
-                public void onResponse(Call<ArrayList<Recipe>> call,
-                                       Response<ArrayList<Recipe>> response) {
-                    Integer statusCode = response.code();
+                public void onResponse(@NonNull Call<ArrayList<Recipe>> call,
+                                       @NonNull Response<ArrayList<Recipe>> response) {
+                    //Integer statusCode = response.code();
                     recipes = response.body();
                     mLoadingIndicator.setVisibility(View.INVISIBLE);
                     mErrorMessageDisplay.setVisibility(View.INVISIBLE);
                     recyclerView.setVisibility(View.VISIBLE);
-                    adapter.setRecipeData(recipes, context);
+                    adapter.setRecipeData(recipes);
                 }
 
                 @Override
-                public void onFailure(Call<ArrayList<Recipe>> call, Throwable t) {
+                public void onFailure(@NonNull Call<ArrayList<Recipe>> call, @NonNull Throwable t) {
                     mLoadingIndicator.setVisibility(View.INVISIBLE);
                     recyclerView.setVisibility(View.INVISIBLE);
                     mErrorMessageDisplay.setVisibility(View.VISIBLE);
@@ -118,7 +117,7 @@ public class MainListActivity
         }
         else {
             recipes = savedInstanceState.getParcelableArrayList("All_recipes");
-            // Log.d(TAG, "onCreate: from savedInstanceState recipes.size " + recipes.size());
+            //Log.d(TAG, "onCreate: from savedInstanceState recipes.size " + recipes.size());
             if (recipes == null) {
                 savedInstanceState = null;
                 mLoadingIndicator.setVisibility(View.INVISIBLE);
@@ -129,7 +128,7 @@ public class MainListActivity
                 mLoadingIndicator.setVisibility(View.INVISIBLE);
                 mErrorMessageDisplay.setVisibility(View.INVISIBLE);
                 recyclerView.setVisibility(View.VISIBLE);
-                adapter.setRecipeData(recipes, context);
+                adapter.setRecipeData(recipes);
             }
         }
 
@@ -149,11 +148,8 @@ public class MainListActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        /* Use AppCompatActivity's method getMenuInflater to get a handle on the menu inflater */
         MenuInflater inflater = getMenuInflater();
-        /* Use the inflater's inflate method to inflate our menu layout to this menu */
         inflater.inflate(R.menu.main, menu);
-        /* Return true so that the menu is displayed in the Toolbar */
         return true;
     }
 

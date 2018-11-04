@@ -25,5 +25,6 @@
     <string name="network_call_error_textview_message">Cannot load list of recipes.\nCheck internet connection.</string>
     <string name="network_call_error_toast_message">Something went wrong… Please try later!</string>
     <string name="bundle_missing_error">No recipe bundle found</string>
+    <string name="ingredients_title">Ingredients:</string>
 
 </resources>

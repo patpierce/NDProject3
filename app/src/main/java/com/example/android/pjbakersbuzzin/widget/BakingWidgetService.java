@@ -13,7 +13,7 @@ public class BakingWidgetService extends RemoteViewsService {
 
     private static final String TAG = BakingWidgetService.class.getSimpleName();
 
-    List<String> remoteIngredientsList;
+    private List<String> remoteIngredientsList;
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
@@ -22,9 +22,9 @@ public class BakingWidgetService extends RemoteViewsService {
 
     class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
-        Context mContext = null;
+        Context mContext;
 
-        public GridRemoteViewsFactory(Context context,Intent intent) {
+        GridRemoteViewsFactory(Context context, Intent intent) {
             mContext = context;
         }
 

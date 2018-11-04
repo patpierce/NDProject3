@@ -30,13 +30,13 @@ public class RecipeDetailActivity
 
     private Parcelable savedRecyclerLayoutState;
 
-    Bundle currentRecipeBundle;
+    private Bundle currentRecipeBundle;
     private ArrayList<Recipe> recipe;
     private int clickedItemIndex;
     private boolean mTwoPane;
 
-    RecipeDetailFragment recipeDetailFragment = new RecipeDetailFragment();
-    FragmentManager rFragmentManager = getSupportFragmentManager();
+    private final RecipeDetailFragment recipeDetailFragment = new RecipeDetailFragment();
+    private final FragmentManager rFragmentManager = getSupportFragmentManager();
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -43,7 +43,7 @@ public class StepDetailFragment extends Fragment {
     public StepDetailFragment() {
     }
 
-    ButtonClickListener navClickListener;
+    private ButtonClickListener navClickListener;
 
     public interface ButtonClickListener {
         void onButtonClick(Integer targetStepIndex);
@@ -91,7 +91,7 @@ public class StepDetailFragment extends Fragment {
             String shortDescription = steps.get(clickedItemIndex).getShortDescription();
             String description = steps.get(clickedItemIndex).getDescription();
             String videoUrl = steps.get(clickedItemIndex).getVideoURL();
-            String thumbnailURL = steps.get(clickedItemIndex).getThumbnailURL();
+            //String thumbnailURL = steps.get(clickedItemIndex).getThumbnailURL();
 
             final View stepView = inflater.inflate(R.layout.fragment_step_detail, viewGroup, false);
             TextView stepTitleView = (TextView) stepView.findViewById(R.id.tv_step_short_description);
@@ -162,8 +162,8 @@ public class StepDetailFragment extends Fragment {
 
     }
 
-    public void setListIndex(int newindex) {
-        clickedItemIndex = newindex;
+    private void setListIndex(int newIndex) {
+        clickedItemIndex = newIndex;
     }
 
     private void initializePlayer(Uri mediaUri) {
@@ -196,7 +196,7 @@ public class StepDetailFragment extends Fragment {
                 Factory(dataSourceFactory).createMediaSource(uri);
     }
 
-    public void exoPlayerStopReleaseResources() {
+    private void exoPlayerStopReleaseResources() {
         if (exoPlayer != null) {
             exoPlayer.stop();
             exoPlayer.release();

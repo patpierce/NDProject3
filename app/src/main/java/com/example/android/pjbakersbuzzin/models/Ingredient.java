@@ -16,7 +16,7 @@ public class Ingredient implements Parcelable{
         this.ingredient = ingredient;
     }
 
-    protected Ingredient(Parcel in) {
+    private Ingredient(Parcel in) {
         if (in.readByte() == 0) {
             quantity = null;
         } else {

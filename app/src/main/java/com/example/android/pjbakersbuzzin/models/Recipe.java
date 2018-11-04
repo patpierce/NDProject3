@@ -11,8 +11,8 @@ public class Recipe implements Parcelable {
 
     private Integer id;
     private String name;
-    private List<Ingredient> ingredients = null;
-    private ArrayList<Step> steps = null;
+    private List<Ingredient> ingredients;
+    private ArrayList<Step> steps;
     private Integer servings;
     private String image;
 
@@ -26,7 +26,7 @@ public class Recipe implements Parcelable {
         this.image = image;
     }
 
-    protected Recipe(Parcel in) {
+    private Recipe(Parcel in) {
         if (in.readByte() == 0) {
             id = null;
         } else {

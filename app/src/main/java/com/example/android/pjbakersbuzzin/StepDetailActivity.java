@@ -28,17 +28,14 @@ public class StepDetailActivity extends AppCompatActivity
         implements StepDetailFragment.ButtonClickListener {
 
     private static final String TAG = StepDetailActivity.class.getSimpleName();
-    Bundle currentRecipeBundle;
+    private Bundle currentRecipeBundle;
     private ArrayList<Recipe> recipe;
     private Integer clickedItemIndex;
-    private String recipeName;
-    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step_detail);
-        context = getApplicationContext();
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (savedInstanceState != null) {
@@ -64,7 +61,7 @@ public class StepDetailActivity extends AppCompatActivity
             }
         }
 
-        recipeName = recipe.get(0).getName();
+        String recipeName = recipe.get(0).getName();
         getSupportActionBar().setTitle(recipeName);
 
         currentRecipeBundle.putInt("Step_Index", clickedItemIndex);

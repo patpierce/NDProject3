@@ -10,6 +10,7 @@ import com.example.android.pjbakersbuzzin.R;
 import com.example.android.pjbakersbuzzin.models.Ingredient;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * {@link IngredientListRecyclerAdapter} exposes a list of ingredient items to a
@@ -40,7 +41,8 @@ public class IngredientListRecyclerAdapter
         String measure = dataList.get(position).getMeasure();
         String ingredient = dataList.get(position).getIngredient();
 
-        holder.mIngredientQuantityTextView.setText(quantity.toString());
+        holder.mIngredientQuantityTextView.setText(
+            String.format(Locale.getDefault(), (quantity % 1 == 0 ? "%.0f" : "%.2f"), quantity));
         holder.mIngredientMeasureTextView.setText(measure);
         holder.mIngredientNameTextView.setText(ingredient);
     }

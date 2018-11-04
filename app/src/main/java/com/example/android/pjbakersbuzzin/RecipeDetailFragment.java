@@ -31,7 +31,7 @@ public class RecipeDetailFragment extends Fragment {
 
     // Strings to store information about the recipe
     private ArrayList<Recipe> recipe;
-    List<Ingredient> mIngredients;
+    private List<Ingredient> mIngredients;
 
     public RecipeDetailFragment() {
     }
@@ -75,15 +75,15 @@ public class RecipeDetailFragment extends Fragment {
 
         // Setup RecyclerView for Ingredients
         RecyclerView ingredientsListRecView = (RecyclerView) recipeDetailPaneView.findViewById(R.id.rv_ingredients);
-        LinearLayoutManager ilayoutManager = new LinearLayoutManager(context);
+        LinearLayoutManager iLayoutManager = new LinearLayoutManager(context);
         IngredientListRecyclerAdapter ingredientsAdapter =
                 new IngredientListRecyclerAdapter();
-        ingredientsListRecView.setLayoutManager(ilayoutManager);
+        ingredientsListRecView.setLayoutManager(iLayoutManager);
         ingredientsListRecView.setHasFixedSize(true);
         ingredientsListRecView.setAdapter(ingredientsAdapter);
         ingredientsAdapter.setIngredientData(mIngredients);
 
-        // Setup RecyclerView for Steps wiht clicklistener
+        // Setup RecyclerView for Steps with clickListener
         RecyclerView stepsListRecView = (RecyclerView) recipeDetailPaneView.findViewById(R.id.rv_steps);
         GridLayoutManager sLayoutManager = new GridLayoutManager(context, 1);
         stepsListRecView.setLayoutManager(sLayoutManager);
@@ -103,7 +103,7 @@ public class RecipeDetailFragment extends Fragment {
                     a.getMeasure()  + " " +
                     a.getIngredient()
             );
-        };
+        }
 
         // This widget code does not work with "targetSdkVersion 27" in build.gradle
         //   changed it to "targetSdkVersion 25" and it works

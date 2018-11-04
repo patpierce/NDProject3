@@ -24,9 +24,9 @@ public class MainListRecyclerAdapter
     private static final String TAG = MainListRecyclerAdapter.class.getSimpleName();
 
     private ArrayList<Recipe> dataList;
-    private Context context;
+//    private Context context;
 
-    private ListItemClickListener onClickListener;
+    final private ListItemClickListener onClickListener;
 
     public interface ListItemClickListener {
         void onListItemClick(Recipe clickedRecipeCard);
@@ -43,9 +43,9 @@ public class MainListRecyclerAdapter
         onClickListener = listener;
     }
 
-    public void setRecipeData(ArrayList<Recipe> recipesIn, Context contextIn) {
+    public void setRecipeData(ArrayList<Recipe> recipesIn) {
         dataList = recipesIn;
-        context = contextIn;
+//        context = contextIn;
         notifyDataSetChanged();
     }
 

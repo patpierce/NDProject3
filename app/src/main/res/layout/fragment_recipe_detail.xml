@@ -31,9 +31,8 @@
             style="@style/TextAppearance.AppCompat.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="112dp"
-            android:text="Crumb Cake"
             android:textSize="24sp"
+            android:textAlignment="viewStart"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="2"
             app:layout_constraintStart_toEndOf="@id/iv_recipe_detail_image"
@@ -46,10 +45,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="14sp"
-            android:text="Serves: Many"
+            android:textAlignment="viewStart"
             app:layout_constraintStart_toStartOf="@id/tv_recipe_name"
             app:layout_constraintTop_toBottomOf="@id/tv_recipe_name"
-            tools:text="Serves: Man"/>
+            tools:text="Serves: Many"/>
 
         <TextView
             android:id="@+id/tv_ingredients_title"
@@ -58,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textSize="14sp"
-            android:text="Ingredients:"
+            android:text="@string/ingredients_title"
             app:layout_constraintStart_toStartOf="@id/tv_recipe_name"
             app:layout_constraintTop_toBottomOf="@id/iv_recipe_detail_image"
             tools:text="Ingredients:"/>
@@ -72,8 +71,8 @@
             app:layout_constraintEnd_toEndOf="parent">
 
             <FrameLayout
-                android:id="@+id/ingredientframeLayout"
-                android:layout_width="match_parent"
+                android:id="@+id/ingredient_frame_layout"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -84,7 +83,7 @@
         </HorizontalScrollView>
 
         <FrameLayout
-            android:id="@+id/stepframeLayout"
+            android:id="@+id/step_frame_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
