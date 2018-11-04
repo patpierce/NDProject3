@@ -7,48 +7,48 @@
     android:layout_height="match_parent">
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/cl_recipe_detail_fragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/cl_recipe_detail_fragment">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/iv_recipe_detail_image"
-            android:src="@drawable/vg_small_oven"
             android:layout_width="@dimen/photo_width"
             android:layout_height="@dimen/photo_height"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:contentDescription="@string/recipe_photo_description"
+            android:scaleType="centerCrop"
+            android:src="@drawable/vg_small_oven"
+            android:tint="#01d277"
+            app:layout_constraintEnd_toStartOf="@id/tv_recipe_name"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/tv_recipe_name"
-            android:scaleType="centerCrop"
-            android:tint="#01d277"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_recipe_name"
             style="@style/TextAppearance.AppCompat.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
             android:textAlignment="viewStart"
+            android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="2"
             app:layout_constraintStart_toEndOf="@id/iv_recipe_detail_image"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Rum Cake"/>
+            tools:text="Rum Cake" />
 
         <TextView
             android:id="@+id/tv_detail_num_servings"
             style="@style/TextAppearance.AppCompat.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
             android:textAlignment="viewStart"
+            android:textSize="14sp"
             app:layout_constraintStart_toStartOf="@id/tv_recipe_name"
             app:layout_constraintTop_toBottomOf="@id/tv_recipe_name"
-            tools:text="Serves: Many"/>
+            tools:text="Serves: Many" />
 
         <TextView
             android:id="@+id/tv_ingredients_title"
@@ -56,19 +56,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textSize="14sp"
             android:text="@string/ingredients_title"
+            android:textSize="14sp"
             app:layout_constraintStart_toStartOf="@id/tv_recipe_name"
             app:layout_constraintTop_toBottomOf="@id/iv_recipe_detail_image"
-            tools:text="Ingredients:"/>
+            tools:text="Ingredients:" />
 
         <HorizontalScrollView
             android:id="@+id/sv_ingredients"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_ingredients_title"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/tv_ingredients_title">
 
             <FrameLayout
                 android:id="@+id/ingredient_frame_layout"
@@ -76,7 +76,7 @@
                 android:layout_height="match_parent"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-                <include layout="@layout/rv_ingredients_list"/>
+                <include layout="@layout/rv_ingredients_list" />
 
             </FrameLayout>
 
@@ -86,13 +86,13 @@
             android:id="@+id/step_frame_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/sv_ingredients"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sv_ingredients">
 
-            <include layout="@layout/rv_steps_list"/>
+            <include layout="@layout/rv_steps_list" />
 
         </FrameLayout>
 

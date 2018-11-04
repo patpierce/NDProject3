@@ -8,8 +8,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 // retrofit client instance
 public final class RetrofitClientInstance {
 
-    private static GetDataService recipeList;
     private static final String BASE_URL = "http://go.udacity.com";
+    private static GetDataService recipeList;
 
     public static GetDataService getRecipejson() {
 

@@ -6,6 +6,17 @@ import android.os.Parcelable;
 // retrieves recipe steps from retrofit call
 public class Step implements Parcelable {
 
+    public static final Creator<Step> CREATOR = new Creator<Step>() {
+        @Override
+        public Step createFromParcel(Parcel in) {
+            return new Step(in);
+        }
+
+        @Override
+        public Step[] newArray(int size) {
+            return new Step[size];
+        }
+    };
     private Integer id;
     private String shortDescription;
     private String description;
@@ -91,17 +102,5 @@ public class Step implements Parcelable {
         parcel.writeString(videoURL);
         parcel.writeString(thumbnailURL);
     }
-
-    public static final Creator<Step> CREATOR = new Creator<Step>() {
-        @Override
-        public Step createFromParcel(Parcel in) {
-            return new Step(in);
-        }
-
-        @Override
-        public Step[] newArray(int size) {
-            return new Step[size];
-        }
-    };
 
 }

@@ -4,8 +4,19 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 // retrieves recipe ingredients from retrofit call
-public class Ingredient implements Parcelable{
+public class Ingredient implements Parcelable {
 
+    public static final Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
+        @Override
+        public Ingredient createFromParcel(Parcel in) {
+            return new Ingredient(in);
+        }
+
+        @Override
+        public Ingredient[] newArray(int size) {
+            return new Ingredient[size];
+        }
+    };
     private Double quantity;
     private String measure;
     private String ingredient;
@@ -66,17 +77,5 @@ public class Ingredient implements Parcelable{
         parcel.writeString(measure);
         parcel.writeString(ingredient);
     }
-
-    public static final Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
-        @Override
-        public Ingredient createFromParcel(Parcel in) {
-            return new Ingredient(in);
-        }
-
-        @Override
-        public Ingredient[] newArray(int size) {
-            return new Ingredient[size];
-        }
-    };
 
 }

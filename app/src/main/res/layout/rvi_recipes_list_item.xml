@@ -4,44 +4,44 @@
     android:id="@+id/ll_recipes_list_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:background="@android:drawable/editbox_background">
+    android:background="@android:drawable/editbox_background"
+    android:orientation="horizontal">
 
     <LinearLayout
         android:id="@+id/ll_recipes_list_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="24dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="24dp">
 
         <TextView
             android:id="@+id/tv_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
             android:textAppearance="?attr/textAppearanceListItem"
-            tools:text="Fillerup Cake"/>
+            android:textSize="20sp"
+            tools:text="Fillerup Cake" />
 
         <TextView
             android:id="@+id/tv_num_servings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
             android:textAppearance="?attr/textAppearanceListItem"
-            tools:text=" Serves 8"/>
+            android:textSize="14sp"
+            tools:text=" Serves 8" />
 
     </LinearLayout>
 
     <ImageView
         android:id="@+id/iv_recipe_image"
-        android:src="@drawable/vg_kitchen"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_margin="16dp"
         android:layout_gravity="center|end"
+        android:layout_margin="16dp"
         android:layout_weight="1"
         android:contentDescription="@string/recipe_photo_description"
         android:scaleType="fitEnd"
-        android:tint="#01d277"/>
+        android:src="@drawable/vg_kitchen"
+        android:tint="#01d277" />
 
 </LinearLayout>

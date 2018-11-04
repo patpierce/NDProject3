@@ -39,14 +39,9 @@ public class StepDetailFragment extends Fragment {
 
     private PlayerView exoPlayerView;
     private SimpleExoPlayer exoPlayer;
-
-    public StepDetailFragment() {
-    }
-
     private ButtonClickListener navClickListener;
 
-    public interface ButtonClickListener {
-        void onButtonClick(Integer targetStepIndex);
+    public StepDetailFragment() {
     }
 
     @Override
@@ -115,8 +110,7 @@ public class StepDetailFragment extends Fragment {
                 exoPlaceholderView.setVisibility(View.GONE);
                 exoPlayerView.setVisibility(View.VISIBLE);
                 initializePlayer(Uri.parse(videoUrl));
-            }
-            else {
+            } else {
                 exoPlayerView.setVisibility(View.GONE);
                 exoPlaceholderView.setVisibility(View.VISIBLE);
                 exoPlayer = null;
@@ -128,11 +122,12 @@ public class StepDetailFragment extends Fragment {
                 public void onClick(View view) {
                     if (clickedItemIndex > 0) {
                         Integer targetStepIndex = clickedItemIndex - 1;
-                        if (exoPlayer != null){ exoPlayer.stop(); }
+                        if (exoPlayer != null) {
+                            exoPlayer.stop();
+                        }
                         setListIndex(targetStepIndex);
                         navClickListener.onButtonClick(targetStepIndex);
-                    }
-                    else {
+                    } else {
                         Toast.makeText(getActivity(),
                                 R.string.begin_of_steps_message, Toast.LENGTH_SHORT).show();
                     }
@@ -144,11 +139,12 @@ public class StepDetailFragment extends Fragment {
                 public void onClick(View view) {
                     if (clickedItemIndex < (steps.size() - 1)) {
                         Integer targetStepIndex = clickedItemIndex + 1;
-                        if (exoPlayer != null){ exoPlayer.stop(); }
+                        if (exoPlayer != null) {
+                            exoPlayer.stop();
+                        }
                         setListIndex(targetStepIndex);
                         navClickListener.onButtonClick(targetStepIndex);
-                    }
-                    else {
+                    } else {
                         Toast.makeText(getActivity(),
                                 R.string.end_of_steps_message, Toast.LENGTH_SHORT).show();
                     }
@@ -233,6 +229,10 @@ public class StepDetailFragment extends Fragment {
         super.onSaveInstanceState(currentState);
         currentState.putParcelableArrayList("Saved_Steps_Bundle", steps);
         currentState.putInt("Saved_Step_Index", clickedItemIndex);
+    }
+
+    public interface ButtonClickListener {
+        void onButtonClick(Integer targetStepIndex);
     }
 
 }

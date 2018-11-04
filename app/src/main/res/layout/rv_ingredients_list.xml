@@ -9,4 +9,4 @@
     android:layout_marginRight="18dp"
     app:layoutManager="android.support.v7.widget.LinearLayoutManager"
     tools:context=".RecipeDetailActivity"
-    tools:listitem="@layout/rvi_ingredient_list_item"/>
+    tools:listitem="@layout/rvi_ingredient_list_item" />

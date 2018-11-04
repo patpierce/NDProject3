@@ -22,15 +22,9 @@ public class StepListRecyclerAdapter
         extends RecyclerView.Adapter<StepListRecyclerAdapter.StepsViewHolder> {
 
     private static final String TAG = StepListRecyclerAdapter.class.getSimpleName();
-
+    private final ListItemClickListener mStepOnClickListener;
     private ArrayList<Step> dataList;
     private Context context;
-
-    private final ListItemClickListener mStepOnClickListener;
-
-    public interface ListItemClickListener {
-        void onListItemClick(int clickedItemIndex);
-    }
 
     /**
      * Constructor for StepListRecyclerAdapter that accepts
@@ -72,6 +66,15 @@ public class StepListRecyclerAdapter
                 .placeholder(R.drawable.vg_spoon).into(holder.mStepThumbnailImageView);
     }
 
+    @Override
+    public int getItemCount() {
+        return (dataList == null) ? 0 : dataList.size();
+    }
+
+    public interface ListItemClickListener {
+        void onListItemClick(int clickedItemIndex);
+    }
+
     public class StepsViewHolder
             extends RecyclerView.ViewHolder
             implements View.OnClickListener {
@@ -102,11 +105,6 @@ public class StepListRecyclerAdapter
             int clickedPosition = getAdapterPosition();
             mStepOnClickListener.onListItemClick(clickedPosition);
         }
-    }
-
-    @Override
-    public int getItemCount() {
-        return (dataList == null) ? 0 : dataList.size();
     }
 
 }

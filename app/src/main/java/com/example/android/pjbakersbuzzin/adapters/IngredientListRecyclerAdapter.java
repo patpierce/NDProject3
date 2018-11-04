@@ -42,9 +42,14 @@ public class IngredientListRecyclerAdapter
         String ingredient = dataList.get(position).getIngredient();
 
         holder.mIngredientQuantityTextView.setText(
-            String.format(Locale.getDefault(), (quantity % 1 == 0 ? "%.0f" : "%.2f"), quantity));
+                String.format(Locale.getDefault(), (quantity % 1 == 0 ? "%.0f" : "%.2f"), quantity));
         holder.mIngredientMeasureTextView.setText(measure);
         holder.mIngredientNameTextView.setText(ingredient);
+    }
+
+    @Override
+    public int getItemCount() {
+        return (dataList == null) ? 0 : dataList.size();
     }
 
     public class IngredientsViewHolder
@@ -69,11 +74,6 @@ public class IngredientListRecyclerAdapter
             mIngredientMeasureTextView = (TextView) itemView.findViewById(R.id.tv_ingredient_measure);
         }
 
-    }
-
-    @Override
-    public int getItemCount() {
-        return (dataList == null) ? 0 : dataList.size();
     }
 
 }

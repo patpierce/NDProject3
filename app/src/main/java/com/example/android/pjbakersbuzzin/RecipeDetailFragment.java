@@ -31,7 +31,6 @@ public class RecipeDetailFragment extends Fragment {
 
     // Strings to store information about the recipe
     private ArrayList<Recipe> recipe;
-    private List<Ingredient> mIngredients;
 
     public RecipeDetailFragment() {
     }
@@ -51,7 +50,7 @@ public class RecipeDetailFragment extends Fragment {
             recipe = savedInstanceState.getParcelableArrayList("Current_Recipe");
         } else {
             sv.smoothScrollTo(0, 0);
-            recipe =  getArguments().getParcelableArrayList("Current_Recipe");
+            recipe = getArguments().getParcelableArrayList("Current_Recipe");
         }
         if (recipe == null) {
             Toast.makeText(getActivity(),
@@ -62,7 +61,7 @@ public class RecipeDetailFragment extends Fragment {
         // Parse the recipe info from the bundle from MainListActivity
         // Integer mRecipeId = recipe.get(0).getId();
         String mRecipeName = recipe.get(0).getName();
-        mIngredients = recipe.get(0).getIngredients();
+        List<Ingredient> mIngredients = recipe.get(0).getIngredients();
         ArrayList<Step> mSteps = recipe.get(0).getSteps();
         Integer mServings = recipe.get(0).getServings();
         String mImage = recipe.get(0).getImage();
@@ -88,7 +87,7 @@ public class RecipeDetailFragment extends Fragment {
         GridLayoutManager sLayoutManager = new GridLayoutManager(context, 1);
         stepsListRecView.setLayoutManager(sLayoutManager);
         StepListRecyclerAdapter stepsAdapter =
-                new StepListRecyclerAdapter((RecipeDetailActivity)getActivity());
+                new StepListRecyclerAdapter((RecipeDetailActivity) getActivity());
         stepsListRecView.setHasFixedSize(true);
         stepsListRecView.setAdapter(stepsAdapter);
         stepsAdapter.setStepData(mSteps, context);
@@ -100,7 +99,7 @@ public class RecipeDetailFragment extends Fragment {
         for (Ingredient a : mIngredients) {
             ingredientsForWidgets.add(" " +
                     a.getQuantity().toString() + " " +
-                    a.getMeasure()  + " " +
+                    a.getMeasure() + " " +
                     a.getIngredient()
             );
         }

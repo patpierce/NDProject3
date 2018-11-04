@@ -3,6 +3,7 @@ package com.example.android.pjbakersbuzzin.widget;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+
 import java.util.ArrayList;
 
 // This widget code does not work with "targetSdkVersion 27" in build.gradle
@@ -19,7 +20,7 @@ public class UpdateBakingWidgetService extends IntentService {
     public static void startBakingService(Context context,
                                           ArrayList<String> fromActivityIngredientsList) {
         Intent intent = new Intent(context, UpdateBakingWidgetService.class);
-        intent.putExtra("Passed_Ingredients",fromActivityIngredientsList);
+        intent.putExtra("Passed_Ingredients", fromActivityIngredientsList);
         context.startService(intent);
     }
 
@@ -35,7 +36,7 @@ public class UpdateBakingWidgetService extends IntentService {
     private void handleActionUpdateBakingWidgets(ArrayList<String> fromActivityIngredientsList) {
         Intent intent = new Intent("android.appwidget.action.APPWIDGET_UPDATE2");
         intent.setAction("android.appwidget.action.APPWIDGET_UPDATE2");
-        intent.putStringArrayListExtra("Passed_Ingredients",fromActivityIngredientsList);
+        intent.putStringArrayListExtra("Passed_Ingredients", fromActivityIngredientsList);
         sendBroadcast(intent);
     }
 

@@ -22,15 +22,9 @@ public class MainListRecyclerAdapter
         extends RecyclerView.Adapter<MainListRecyclerAdapter.RecipeListViewHolder> {
 
     private static final String TAG = MainListRecyclerAdapter.class.getSimpleName();
-
-    private ArrayList<Recipe> dataList;
-//    private Context context;
-
     final private ListItemClickListener onClickListener;
-
-    public interface ListItemClickListener {
-        void onListItemClick(Recipe clickedRecipeCard);
-    }
+//    private Context context;
+    private ArrayList<Recipe> dataList;
 
     /**
      * Constructor for IngredientListRecyclerAdapter that accepts
@@ -72,6 +66,15 @@ public class MainListRecyclerAdapter
                 .placeholder(R.drawable.vg_kitchen).into(holder.recipeImageView);
     }
 
+    @Override
+    public int getItemCount() {
+        return (dataList == null) ? 0 : dataList.size();
+    }
+
+    public interface ListItemClickListener {
+        void onListItemClick(Recipe clickedRecipeCard);
+    }
+
     public class RecipeListViewHolder
             extends RecyclerView.ViewHolder
             implements View.OnClickListener {
@@ -102,11 +105,6 @@ public class MainListRecyclerAdapter
             int clickedPosition = getAdapterPosition();
             onClickListener.onListItemClick(dataList.get(clickedPosition));
         }
-    }
-
-    @Override
-    public int getItemCount() {
-        return (dataList == null) ? 0 : dataList.size();
     }
 
 }

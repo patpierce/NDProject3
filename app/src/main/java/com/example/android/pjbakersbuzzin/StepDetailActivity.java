@@ -1,6 +1,5 @@
 package com.example.android.pjbakersbuzzin;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -138,7 +137,9 @@ public class StepDetailActivity extends AppCompatActivity
                 stepInstructionsView.setVisibility(View.GONE);
                 buttonsRowLayout.setVisibility(View.GONE);
                 // hide app top toolbar
-                if(getSupportActionBar()!=null) { getSupportActionBar().hide(); }
+                if (getSupportActionBar() != null) {
+                    getSupportActionBar().hide();
+                }
                 // hide the home/back/overview buttons (these come back when you touch anywhere)
                 decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
                 // hide the top android status bar
@@ -149,8 +150,7 @@ public class StepDetailActivity extends AppCompatActivity
                 lLparams.width = ViewGroup.LayoutParams.MATCH_PARENT;
                 lLparams.height = ViewGroup.LayoutParams.MATCH_PARENT;
                 exoPlayerView.setLayoutParams(lLparams);
-            }
-            else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
                 // set video window back to 0dp h for using "layout_weight" for height
                 lLparams.width = ViewGroup.LayoutParams.MATCH_PARENT;
                 lLparams.height = 0;
@@ -158,7 +158,9 @@ public class StepDetailActivity extends AppCompatActivity
 
                 // unhide top android status bar
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-                if(getSupportActionBar()!=null) { getSupportActionBar().show(); }
+                if (getSupportActionBar() != null) {
+                    getSupportActionBar().show();
+                }
                 stepTitleView.setVisibility(View.VISIBLE);
                 stepInstructionsView.setVisibility(View.VISIBLE);
                 buttonsRowLayout.setVisibility(View.VISIBLE);

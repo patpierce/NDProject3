@@ -3,20 +3,20 @@ package com.example.android.pjbakersbuzzin;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-import android.view.View.OnClickListener;
 
 import com.example.android.pjbakersbuzzin.adapters.MainListRecyclerAdapter;
 import com.example.android.pjbakersbuzzin.models.Recipe;
@@ -35,7 +35,7 @@ public class MainListActivity
 
     private static final String TAG = MainListActivity.class.getSimpleName();
 
-//    private MainListRecyclerAdapter adapter;
+    //    private MainListRecyclerAdapter adapter;
     private RecyclerView recyclerView;
     private LinearLayout mErrorMessageDisplay;
     private ProgressBar mLoadingIndicator;
@@ -114,8 +114,7 @@ public class MainListActivity
                             R.string.network_call_error_toast_message, Toast.LENGTH_SHORT).show();
                 }
             });
-        }
-        else {
+        } else {
             recipes = savedInstanceState.getParcelableArrayList("All_recipes");
             //Log.d(TAG, "onCreate: from savedInstanceState recipes.size " + recipes.size());
             if (recipes == null) {
@@ -123,8 +122,7 @@ public class MainListActivity
                 mLoadingIndicator.setVisibility(View.INVISIBLE);
                 recyclerView.setVisibility(View.INVISIBLE);
                 mErrorMessageDisplay.setVisibility(View.VISIBLE);
-            }
-            else {
+            } else {
                 mLoadingIndicator.setVisibility(View.INVISIBLE);
                 mErrorMessageDisplay.setVisibility(View.INVISIBLE);
                 recyclerView.setVisibility(View.VISIBLE);

@@ -27,16 +27,13 @@ public class RecipeDetailActivity
         StepDetailFragment.ButtonClickListener {
 
     private static final String TAG = RecipeDetailActivity.class.getSimpleName();
-
+    private final RecipeDetailFragment recipeDetailFragment = new RecipeDetailFragment();
+    private final FragmentManager rFragmentManager = getSupportFragmentManager();
     private Parcelable savedRecyclerLayoutState;
-
     private Bundle currentRecipeBundle;
     private ArrayList<Recipe> recipe;
     private int clickedItemIndex;
     private boolean mTwoPane;
-
-    private final RecipeDetailFragment recipeDetailFragment = new RecipeDetailFragment();
-    private final FragmentManager rFragmentManager = getSupportFragmentManager();
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,8 +107,7 @@ public class RecipeDetailActivity
             sFragmentManager.beginTransaction()
                     .replace(R.id.step_detail_container, stepDetailFragment)
                     .commit();
-        }
-        else {
+        } else {
             // Add bundle as intent extra, then start Activity with the intent
             Intent intent = new Intent(this, StepDetailActivity.class);
             intent.putExtras(currentRecipeBundle);

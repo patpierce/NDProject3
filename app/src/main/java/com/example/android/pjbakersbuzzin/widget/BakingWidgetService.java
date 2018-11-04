@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
+
 import com.example.android.pjbakersbuzzin.R;
+
 import java.util.List;
 
 import static com.example.android.pjbakersbuzzin.widget.BakingAppWidgetProvider.ingredientsList;
@@ -17,12 +19,12 @@ public class BakingWidgetService extends RemoteViewsService {
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        return new GridRemoteViewsFactory(this.getApplicationContext(),intent);
+        return new GridRemoteViewsFactory(this.getApplicationContext(), intent);
     }
 
     class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
-        Context mContext;
+        final Context mContext;
 
         GridRemoteViewsFactory(Context context, Intent intent) {
             mContext = context;

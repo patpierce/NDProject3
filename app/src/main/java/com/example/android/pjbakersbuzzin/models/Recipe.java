@@ -9,6 +9,17 @@ import java.util.List;
 // retrieves recipes from retrofit call
 public class Recipe implements Parcelable {
 
+    public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
+        @Override
+        public Recipe createFromParcel(Parcel in) {
+            return new Recipe(in);
+        }
+
+        @Override
+        public Recipe[] newArray(int size) {
+            return new Recipe[size];
+        }
+    };
     private Integer id;
     private String name;
     private List<Ingredient> ingredients;
@@ -115,17 +126,5 @@ public class Recipe implements Parcelable {
         }
         parcel.writeString(image);
     }
-
-    public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
-        @Override
-        public Recipe createFromParcel(Parcel in) {
-            return new Recipe(in);
-        }
-
-        @Override
-        public Recipe[] newArray(int size) {
-            return new Recipe[size];
-        }
-    };
 
 }
