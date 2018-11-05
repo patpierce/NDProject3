@@ -19,7 +19,7 @@ import java.util.Locale;
 public class IngredientListRecyclerAdapter
         extends RecyclerView.Adapter<IngredientListRecyclerAdapter.IngredientsViewHolder> {
 
-    private static final String TAG = IngredientListRecyclerAdapter.class.getSimpleName();
+    //private static final String TAG = IngredientListRecyclerAdapter.class.getSimpleName();
 
     private List<Ingredient> dataList;
 

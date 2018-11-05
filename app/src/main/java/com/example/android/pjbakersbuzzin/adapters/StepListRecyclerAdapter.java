@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class StepListRecyclerAdapter
         extends RecyclerView.Adapter<StepListRecyclerAdapter.StepsViewHolder> {
 
-    private static final String TAG = StepListRecyclerAdapter.class.getSimpleName();
+    //private static final String TAG = StepListRecyclerAdapter.class.getSimpleName();
     private final ListItemClickListener mStepOnClickListener;
     private ArrayList<Step> dataList;
     private Context context;
@@ -57,13 +57,16 @@ public class StepListRecyclerAdapter
         String stepNum = (stepId < 1) ? "" :
                 context.getResources().getString(R.string.step_header) + " " + stepId.toString();
         String shortDescription = dataList.get(position).getShortDescription();
+        //String videoUrl = dataList.get(position).getVideoURL();
         String thumbnailUrl = dataList.get(position).getThumbnailURL();
 
         holder.mStepNumberTextView.setText(stepNum);
         holder.mStepsShortDescriptionTextView.setText(shortDescription);
+
         Context context = holder.mStepThumbnailImageView.getContext();
-        Glide.with(context).load(thumbnailUrl)
+        Glide.with(context).load(thumbnailUrl).asBitmap()
                 .placeholder(R.drawable.vg_spoon).into(holder.mStepThumbnailImageView);
+
     }
 
     @Override

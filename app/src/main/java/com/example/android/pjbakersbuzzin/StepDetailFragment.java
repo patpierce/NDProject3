@@ -32,7 +32,7 @@ import java.util.ArrayList;
 
 public class StepDetailFragment extends Fragment {
 
-    private static final String TAG = StepDetailFragment.class.getSimpleName();
+    //private static final String TAG = StepDetailFragment.class.getSimpleName();
 
     private ArrayList<Step> steps;
     private Integer clickedItemIndex;
@@ -86,7 +86,7 @@ public class StepDetailFragment extends Fragment {
             String shortDescription = steps.get(clickedItemIndex).getShortDescription();
             String description = steps.get(clickedItemIndex).getDescription();
             String videoUrl = steps.get(clickedItemIndex).getVideoURL();
-            //String thumbnailURL = steps.get(clickedItemIndex).getThumbnailURL();
+            String thumbnailURL = steps.get(clickedItemIndex).getThumbnailURL();
 
             final View stepView = inflater.inflate(R.layout.fragment_step_detail, viewGroup, false);
             TextView stepTitleView = (TextView) stepView.findViewById(R.id.tv_step_short_description);
@@ -110,6 +110,10 @@ public class StepDetailFragment extends Fragment {
                 exoPlaceholderView.setVisibility(View.GONE);
                 exoPlayerView.setVisibility(View.VISIBLE);
                 initializePlayer(Uri.parse(videoUrl));
+            } else if (thumbnailURL.endsWith(".mp4")) {
+                exoPlaceholderView.setVisibility(View.GONE);
+                exoPlayerView.setVisibility(View.VISIBLE);
+                initializePlayer(Uri.parse(thumbnailURL));
             } else {
                 exoPlayerView.setVisibility(View.GONE);
                 exoPlaceholderView.setVisibility(View.VISIBLE);

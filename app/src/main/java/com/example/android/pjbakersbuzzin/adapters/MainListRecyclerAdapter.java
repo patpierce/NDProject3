@@ -21,9 +21,8 @@ import java.util.ArrayList;
 public class MainListRecyclerAdapter
         extends RecyclerView.Adapter<MainListRecyclerAdapter.RecipeListViewHolder> {
 
-    private static final String TAG = MainListRecyclerAdapter.class.getSimpleName();
+    //private static final String TAG = MainListRecyclerAdapter.class.getSimpleName();
     final private ListItemClickListener onClickListener;
-//    private Context context;
     private ArrayList<Recipe> dataList;
 
     /**
@@ -39,7 +38,6 @@ public class MainListRecyclerAdapter
 
     public void setRecipeData(ArrayList<Recipe> recipesIn) {
         dataList = recipesIn;
-//        context = contextIn;
         notifyDataSetChanged();
     }
 

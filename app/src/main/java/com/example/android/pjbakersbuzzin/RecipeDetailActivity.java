@@ -26,7 +26,7 @@ public class RecipeDetailActivity
         implements StepListRecyclerAdapter.ListItemClickListener,
         StepDetailFragment.ButtonClickListener {
 
-    private static final String TAG = RecipeDetailActivity.class.getSimpleName();
+    //private static final String TAG = RecipeDetailActivity.class.getSimpleName();
     private final RecipeDetailFragment recipeDetailFragment = new RecipeDetailFragment();
     private final FragmentManager rFragmentManager = getSupportFragmentManager();
     private Parcelable savedRecyclerLayoutState;

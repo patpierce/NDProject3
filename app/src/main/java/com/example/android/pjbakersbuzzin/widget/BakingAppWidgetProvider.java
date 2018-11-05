@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class BakingAppWidgetProvider extends AppWidgetProvider {
 
-    private static final String TAG = BakingAppWidgetProvider.class.getSimpleName();
+    //private static final String TAG = BakingAppWidgetProvider.class.getSimpleName();
 
     static ArrayList<String> ingredientsList = new ArrayList<>();
 

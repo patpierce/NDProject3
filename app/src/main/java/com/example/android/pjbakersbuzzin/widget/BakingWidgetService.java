@@ -13,7 +13,7 @@ import static com.example.android.pjbakersbuzzin.widget.BakingAppWidgetProvider.
 
 public class BakingWidgetService extends RemoteViewsService {
 
-    private static final String TAG = BakingWidgetService.class.getSimpleName();
+    //private static final String TAG = BakingWidgetService.class.getSimpleName();
 
     private List<String> remoteIngredientsList;
 

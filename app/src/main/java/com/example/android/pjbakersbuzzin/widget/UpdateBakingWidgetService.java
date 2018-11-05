@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class UpdateBakingWidgetService extends IntentService {
 
-    private static final String TAG = UpdateBakingWidgetService.class.getSimpleName();
+    //private static final String TAG = UpdateBakingWidgetService.class.getSimpleName();
 
     public UpdateBakingWidgetService() {
         super("UpdateBakingWidgetService");

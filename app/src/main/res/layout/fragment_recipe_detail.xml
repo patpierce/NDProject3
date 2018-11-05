@@ -24,7 +24,7 @@
             app:layout_constraintEnd_toStartOf="@id/tv_recipe_name"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
             android:id="@+id/tv_recipe_name"
@@ -37,7 +37,7 @@
             app:layout_constraintHorizontal_weight="2"
             app:layout_constraintStart_toEndOf="@id/iv_recipe_detail_image"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Rum Cake" />
+            tools:text="Rum Cake"/>
 
         <TextView
             android:id="@+id/tv_detail_num_servings"
@@ -48,7 +48,7 @@
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="@id/tv_recipe_name"
             app:layout_constraintTop_toBottomOf="@id/tv_recipe_name"
-            tools:text="Serves: Many" />
+            tools:text="Serves: Many"/>
 
         <TextView
             android:id="@+id/tv_ingredients_title"
@@ -60,7 +60,7 @@
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="@id/tv_recipe_name"
             app:layout_constraintTop_toBottomOf="@id/iv_recipe_detail_image"
-            tools:text="Ingredients:" />
+            tools:text="Ingredients:"/>
 
         <HorizontalScrollView
             android:id="@+id/sv_ingredients"
@@ -76,7 +76,7 @@
                 android:layout_height="match_parent"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-                <include layout="@layout/rv_ingredients_list" />
+                <include layout="@layout/rv_ingredients_list"/>
 
             </FrameLayout>
 
@@ -92,7 +92,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/sv_ingredients">
 
-            <include layout="@layout/rv_steps_list" />
+            <include layout="@layout/rv_steps_list"/>
 
         </FrameLayout>
 

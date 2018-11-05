@@ -27,7 +27,7 @@ import java.util.List;
 
 public class RecipeDetailFragment extends Fragment {
 
-    private static final String TAG = RecipeDetailFragment.class.getSimpleName();
+    //private static final String TAG = RecipeDetailFragment.class.getSimpleName();
 
     // Strings to store information about the recipe
     private ArrayList<Recipe> recipe;

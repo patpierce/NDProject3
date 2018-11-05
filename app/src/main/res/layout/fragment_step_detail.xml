@@ -21,13 +21,13 @@
             android:layout_marginTop="8dp"
             android:textAlignment="center"
             android:textSize="18sp"
-            tools:text="Step 1: Mix it all up" />
+            tools:text="Step 1: Mix it all up"/>
 
         <com.google.android.exoplayer2.ui.PlayerView
             android:id="@+id/exo_player_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2" />
+            android:layout_weight="2"/>
 
         <ImageView
             android:id="@+id/exo_placeholder_view"
@@ -37,7 +37,7 @@
             android:layout_weight="2"
             android:contentDescription="@string/placeholder_image"
             android:src="@drawable/vg_kitchen"
-            android:visibility="gone" />
+            android:visibility="gone"/>
 
         <ScrollView
             android:id="@+id/sv_step_description"
@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:padding="8dp"
                 android:textSize="20sp"
-                tools:text="Take ingredients and put them in. Stir it up real good. Make it hot!" />
+                tools:text="Take ingredients and put them in. Stir it up real good. Make it hot!"/>
 
         </ScrollView>
 
@@ -72,13 +72,13 @@
             android:layout_height="wrap_content"
             android:drawableStart="@drawable/vg_prev"
             android:gravity="center"
-            android:text="@string/prev_button_label" />
+            android:text="@string/prev_button_label"/>
 
         <Space
             android:id="@+id/buffer_space"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"/>
 
         <Button
             android:id="@+id/next_button"
@@ -86,7 +86,7 @@
             android:layout_height="wrap_content"
             android:drawableEnd="@drawable/vg_next"
             android:gravity="center"
-            android:text="@string/next_button_label" />
+            android:text="@string/next_button_label"/>
 
     </LinearLayout>
 

@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?attr/textAppearanceListItem"
             android:textSize="20sp"
-            tools:text="Fillerup Cake" />
+            tools:text="Fillerup Cake"/>
 
         <TextView
             android:id="@+id/tv_num_servings"
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?attr/textAppearanceListItem"
             android:textSize="14sp"
-            tools:text=" Serves 8" />
+            tools:text=" Serves 8"/>
 
     </LinearLayout>
 
@@ -42,6 +42,6 @@
         android:contentDescription="@string/recipe_photo_description"
         android:scaleType="fitEnd"
         android:src="@drawable/vg_kitchen"
-        android:tint="#01d277" />
+        android:tint="#01d277"/>
 
 </LinearLayout>

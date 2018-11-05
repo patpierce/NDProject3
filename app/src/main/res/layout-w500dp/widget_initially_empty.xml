@@ -14,6 +14,6 @@
         android:text="@string/initial_widget_text"
         android:textColor="#ffffff"
         android:textSize="22sp"
-        android:textStyle="bold|italic" />
+        android:textStyle="bold|italic"/>
 
 </RelativeLayout>

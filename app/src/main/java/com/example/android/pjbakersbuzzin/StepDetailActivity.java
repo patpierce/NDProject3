@@ -26,7 +26,7 @@ import java.util.ArrayList;
 public class StepDetailActivity extends AppCompatActivity
         implements StepDetailFragment.ButtonClickListener {
 
-    private static final String TAG = StepDetailActivity.class.getSimpleName();
+    //private static final String TAG = StepDetailActivity.class.getSimpleName();
     private Bundle currentRecipeBundle;
     private ArrayList<Recipe> recipe;
     private Integer clickedItemIndex;
