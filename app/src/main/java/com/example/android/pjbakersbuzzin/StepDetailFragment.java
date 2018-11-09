@@ -1,14 +1,18 @@
 package com.example.android.pjbakersbuzzin;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,9 +38,16 @@ public class StepDetailFragment extends Fragment {
 
     //private static final String TAG = StepDetailFragment.class.getSimpleName();
 
+    private ArrayList<Recipe> recipe;
     private ArrayList<Step> steps;
     private Integer clickedItemIndex;
+    private long videoCurrentPosition;
+    boolean videoPlayWhenReady = true;
+    private boolean mTwoPane;
 
+    private TextView stepTitleView;
+    private TextView stepInstructionsView;
+    private LinearLayout buttonsRowLayout;
     private PlayerView exoPlayerView;
     private SimpleExoPlayer exoPlayer;
     private ButtonClickListener navClickListener;
@@ -47,7 +58,7 @@ public class StepDetailFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        // This makes sure that the host activity has implemented the callback interface
+        // This makes sure that the host activity has implemented the listener callback interface
         try {
             navClickListener = (ButtonClickListener) context;
         } catch (ClassCastException e) {
@@ -61,104 +72,104 @@ public class StepDetailFragment extends Fragment {
         // always reference specific Step by the "clickedItemIndex" which is automatically generated (0-n)
         //  and not the "stepId", which is supplied by API and may skip integers
 
+        final View stepView = inflater.inflate(R.layout.fragment_step_detail, viewGroup, false);
+        stepTitleView = (TextView) stepView.findViewById(R.id.tv_step_short_description);
+        stepInstructionsView = (TextView) stepView.findViewById(R.id.tv_step_description);
+        buttonsRowLayout = (LinearLayout) stepView.findViewById(R.id.ll_buttons_row);
+        if (getActivity().findViewById(R.id.divider1) != null) { mTwoPane = true; }
+
         if (savedInstanceState != null) {
-            steps = savedInstanceState.getParcelableArrayList("Saved_Steps_Bundle");
-            clickedItemIndex = savedInstanceState.getInt("Saved_Step_Index");
+            recipe = savedInstanceState.getParcelableArrayList("Current_Recipe");
+            steps = recipe.get(0).getSteps();
+            clickedItemIndex = savedInstanceState.getInt("Step_Index");
+            videoCurrentPosition = savedInstanceState.getLong("Video_Position");
+            videoPlayWhenReady = savedInstanceState.getBoolean("Video_State");
         } else {
             Bundle arguments = getArguments();
             if (arguments != null) {
-                if (steps == null) {
-                    if (arguments.containsKey("Current_Recipe")) {
-                        ArrayList<Recipe> recipe = getArguments().getParcelableArrayList("Current_Recipe");
-                        steps = recipe.get(0).getSteps();
-                    }
+                if (arguments.containsKey("Current_Recipe")) {
+                    recipe = getArguments().getParcelableArrayList("Current_Recipe");
+                    steps = recipe.get(0).getSteps();
                 }
-                if (clickedItemIndex == null) {
-                    // we didnt get it from savedInstanceState
-                    if (arguments.containsKey("Step_Index")) {
-                        clickedItemIndex = arguments.getInt("Step_Index");
-                    } else {
-                        clickedItemIndex = 0;
-                    }
+                if (arguments.containsKey("Step_Index")) {
+                    clickedItemIndex = arguments.getInt("Step_Index");
                 }
             }
-            Integer stepId = steps.get(clickedItemIndex).getId();
-            String shortDescription = steps.get(clickedItemIndex).getShortDescription();
-            String description = steps.get(clickedItemIndex).getDescription();
-            String videoUrl = steps.get(clickedItemIndex).getVideoURL();
-            String thumbnailURL = steps.get(clickedItemIndex).getThumbnailURL();
-
-            final View stepView = inflater.inflate(R.layout.fragment_step_detail, viewGroup, false);
-            TextView stepTitleView = (TextView) stepView.findViewById(R.id.tv_step_short_description);
-            TextView stepInstructionsView = (TextView) stepView.findViewById(R.id.tv_step_description);
-
-            // Building the text views is the only place to use "stepId" as retrieved from API
-            String stepTitleString = (stepId < 1) ? "" : getString(R.string.step_header) +
-                    " " + stepId.toString() + ": ";
-            stepTitleString = stepTitleString + shortDescription;
-            stepTitleView.setText(stepTitleString);
-
-            if (!description.equals(shortDescription)) {
-                stepInstructionsView.setText(description);
-            }
-
-            ImageView exoPlaceholderView = (ImageView) stepView.findViewById(R.id.exo_placeholder_view);
-            exoPlayerView = (PlayerView) stepView.findViewById(R.id.exo_player_view);
-            exoPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
-
-            if (!videoUrl.equals("")) {
-                exoPlaceholderView.setVisibility(View.GONE);
-                exoPlayerView.setVisibility(View.VISIBLE);
-                initializePlayer(Uri.parse(videoUrl));
-            } else if (thumbnailURL.endsWith(".mp4")) {
-                exoPlaceholderView.setVisibility(View.GONE);
-                exoPlayerView.setVisibility(View.VISIBLE);
-                initializePlayer(Uri.parse(thumbnailURL));
-            } else {
-                exoPlayerView.setVisibility(View.GONE);
-                exoPlaceholderView.setVisibility(View.VISIBLE);
-                exoPlayer = null;
-            }
-
-            Button prevButtonView = (Button) stepView.findViewById(R.id.previous_button);
-            prevButtonView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (clickedItemIndex > 0) {
-                        Integer targetStepIndex = clickedItemIndex - 1;
-                        if (exoPlayer != null) {
-                            exoPlayer.stop();
-                        }
-                        setListIndex(targetStepIndex);
-                        navClickListener.onButtonClick(targetStepIndex);
-                    } else {
-                        Toast.makeText(getActivity(),
-                                R.string.begin_of_steps_message, Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-
-            Button nextButtonView = (Button) stepView.findViewById(R.id.next_button);
-            nextButtonView.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    if (clickedItemIndex < (steps.size() - 1)) {
-                        Integer targetStepIndex = clickedItemIndex + 1;
-                        if (exoPlayer != null) {
-                            exoPlayer.stop();
-                        }
-                        setListIndex(targetStepIndex);
-                        navClickListener.onButtonClick(targetStepIndex);
-                    } else {
-                        Toast.makeText(getActivity(),
-                                R.string.end_of_steps_message, Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-
-            return stepView;
         }
 
-        return null;
+        Integer stepId = steps.get(clickedItemIndex).getId();
+        String shortDescription = steps.get(clickedItemIndex).getShortDescription();
+        String description = steps.get(clickedItemIndex).getDescription();
+        String videoUrl = steps.get(clickedItemIndex).getVideoURL();
+        String thumbnailURL = steps.get(clickedItemIndex).getThumbnailURL();
+
+        // Building the text views is the only place to use "stepId" as retrieved from API
+        String stepTitleString = (stepId < 1) ? "" : getString(R.string.step_header) +
+                " " + stepId.toString() + ": ";
+        stepTitleString = stepTitleString + shortDescription;
+        stepTitleView.setText(stepTitleString);
+
+        if (!description.equals(shortDescription)) {
+            stepInstructionsView.setText(description);
+        }
+
+        ImageView exoPlaceholderView = (ImageView) stepView.findViewById(R.id.exo_placeholder_view);
+        exoPlayerView = (PlayerView) stepView.findViewById(R.id.exo_player_view);
+        exoPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
+
+        String targetUrl = null;
+        if (!TextUtils.isEmpty(videoUrl)) { targetUrl = videoUrl; }
+        else if (thumbnailURL.endsWith(".mp4")) { targetUrl = thumbnailURL; }
+
+        if (!TextUtils.isEmpty(targetUrl)) {
+            exoPlaceholderView.setVisibility(View.GONE);
+            exoPlayerView.setVisibility(View.VISIBLE);
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && !mTwoPane){
+                fullScreenLandscape();
+            }
+            initializePlayer(Uri.parse(targetUrl), videoCurrentPosition);
+        } else {
+            exoPlayerView.setVisibility(View.GONE);
+            exoPlaceholderView.setVisibility(View.VISIBLE);
+            exoPlayer = null;
+        }
+
+        Button prevButtonView = (Button) stepView.findViewById(R.id.previous_button);
+        prevButtonView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (clickedItemIndex > 0) {
+                    int targetStepIndex = clickedItemIndex - 1;
+                    if (exoPlayer != null) {
+                        exoPlayer.stop();
+                    }
+                    setListIndex(targetStepIndex);
+                    navClickListener.onButtonClick(targetStepIndex);
+                } else {
+                    Toast.makeText(getActivity(),
+                            R.string.begin_of_steps_message, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        Button nextButtonView = (Button) stepView.findViewById(R.id.next_button);
+        nextButtonView.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                if (clickedItemIndex < (steps.size() - 1)) {
+                    int targetStepIndex = clickedItemIndex + 1;
+                    if (exoPlayer != null) {
+                        exoPlayer.stop();
+                    }
+                    setListIndex(targetStepIndex);
+                    navClickListener.onButtonClick(targetStepIndex);
+                } else {
+                    Toast.makeText(getActivity(),
+                            R.string.end_of_steps_message, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        return stepView;
 
     }
 
@@ -166,7 +177,7 @@ public class StepDetailFragment extends Fragment {
         clickedItemIndex = newIndex;
     }
 
-    private void initializePlayer(Uri mediaUri) {
+    private void initializePlayer(Uri mediaUri, long seekPos) {
         if (exoPlayer == null) {
             exoPlayer = ExoPlayerFactory.newSimpleInstance(
                     new DefaultRenderersFactory(getContext()),
@@ -174,12 +185,12 @@ public class StepDetailFragment extends Fragment {
                     new DefaultLoadControl());
 
             exoPlayerView.setPlayer(exoPlayer);
-            exoPlayer.seekTo(0);
 
             MediaSource mediaSource = buildMediaSource(mediaUri);
-            exoPlayer.prepare(mediaSource, true, false);
+            exoPlayer.prepare(mediaSource, false, true);
             exoPlayerView.hideController();
-            exoPlayer.setPlayWhenReady(true);
+            exoPlayer.seekTo(seekPos);
+            exoPlayer.setPlayWhenReady(videoPlayWhenReady);
         }
     }
 
@@ -194,6 +205,26 @@ public class StepDetailFragment extends Fragment {
         // Prepare the player with the source.
         return new ExtractorMediaSource.
                 Factory(dataSourceFactory).createMediaSource(uri);
+    }
+
+    private void fullScreenLandscape() {
+        stepTitleView.setVisibility(View.GONE);
+        stepInstructionsView.setVisibility(View.GONE);
+        buttonsRowLayout.setVisibility(View.GONE);
+        if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+        }
+        exoPlayerView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LOW_PROFILE
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+        // set video window match_parent w and h
+        LinearLayout.LayoutParams lLparams =
+                (LinearLayout.LayoutParams) exoPlayerView.getLayoutParams();
+        lLparams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        lLparams.height = ViewGroup.LayoutParams.MATCH_PARENT;
     }
 
     private void exoPlayerStopReleaseResources() {
@@ -231,12 +262,19 @@ public class StepDetailFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle currentState) {
         super.onSaveInstanceState(currentState);
-        currentState.putParcelableArrayList("Saved_Steps_Bundle", steps);
-        currentState.putInt("Saved_Step_Index", clickedItemIndex);
+        currentState.putParcelableArrayList("Current_Recipe", recipe);
+        currentState.putInt("Step_Index", clickedItemIndex);
+
+        if (exoPlayer != null) {
+            videoCurrentPosition = exoPlayer.getCurrentPosition();
+            videoPlayWhenReady = exoPlayer.getPlayWhenReady();
+            currentState.putLong("Video_Position", videoCurrentPosition);
+            currentState.putBoolean("Video_State", videoPlayWhenReady);
+        }
     }
 
     public interface ButtonClickListener {
-        void onButtonClick(Integer targetStepIndex);
+        void onButtonClick(int targetStepIndex);
     }
 
 }

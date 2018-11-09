@@ -98,13 +98,13 @@ public class MainListActivity
         // (it seems to be too small by the height of the status bar),
         // but we assume screenWidthDp is reliable.
         int screenWidthDp = config.screenWidthDp;
-        // Log.d(TAG, "screenWidthDp: " + screenWidthDp);
+        //Log.d(TAG, "screenWidthDp: " + screenWidthDp);
         int screenWidthPx = (int) (screenWidthDp * dens);
-        // Log.d(TAG, "screenWidthPx: " + screenWidthPx);
+        //Log.d(TAG, "screenWidthPx: " + screenWidthPx);
         int itemWidthPx = (int) (resources.getDimension(R.dimen.recipe_card_width));
         int numberOfColumns = (screenWidthPx / itemWidthPx);
-        // Log.d(TAG, "itemWidthPx: " + itemWidthPx);
-        // Log.d(TAG, "numberOfColumns: " + numberOfColumns);
+        //Log.d(TAG, "itemWidthPx: " + itemWidthPx);
+        //Log.d(TAG, "numberOfColumns: " + numberOfColumns);
 
         // Setup RecyclerView for Recipes
         recyclerView = (RecyclerView) findViewById(R.id.rv_main_list);
@@ -146,7 +146,6 @@ public class MainListActivity
             });
         } else {
             recipes = savedInstanceState.getParcelableArrayList("All_recipes");
-            //Log.d(TAG, "onCreate: from savedInstanceState recipes.size " + recipes.size());
             if (recipes == null) {
                 savedInstanceState = null;
                 mLoadingIndicator.setVisibility(View.INVISIBLE);

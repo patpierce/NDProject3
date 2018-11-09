@@ -32,12 +32,10 @@ public class UIActivityBasicTest {
     @Before
     public void registerIdlingResource() {
         mIdlingResource = mActivityTestRule.getActivity().getIdlingResource();
-        // To prove that the test fails, omit this call:
-        IdlingRegistry.getInstance().register(mIdlingResource);
-//        Espresso.registerIdlingResources(mIdlingResource);
+       IdlingRegistry.getInstance().register(mIdlingResource);
     }
 
-    public static final String RECIPE_NAME = "Yellow Cake";
+    private static final String RECIPE_NAME = "Yellow Cake";
     @Test
     public void checkMainRecyclerText(){
         onView(ViewMatchers.withId(R.id.rv_main_list)).perform(RecyclerViewActions.scrollToPosition(2));
@@ -66,7 +64,6 @@ public class UIActivityBasicTest {
     public void unregisterIdlingResource() {
         if (mIdlingResource != null) {
             IdlingRegistry.getInstance().unregister(mIdlingResource);
-//            Espresso.unregisterIdlingResources(mIdlingResource);
         }
     }
 

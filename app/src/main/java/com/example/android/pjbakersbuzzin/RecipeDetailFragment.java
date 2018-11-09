@@ -46,12 +46,13 @@ public class RecipeDetailFragment extends Fragment {
         ImageView mDetailImageView = (ImageView) recipeDetailPaneView.findViewById(R.id.iv_recipe_detail_image);
         Context context = mDetailImageView.getContext();
 
-        if (savedInstanceState != null) {
-            recipe = savedInstanceState.getParcelableArrayList("Current_Recipe");
-        } else {
+        if (savedInstanceState == null) {
             sv.smoothScrollTo(0, 0);
             recipe = getArguments().getParcelableArrayList("Current_Recipe");
+        } else {
+            recipe = savedInstanceState.getParcelableArrayList("Current_Recipe");
         }
+
         if (recipe == null) {
             Toast.makeText(getActivity(),
                     R.string.bundle_missing_error, Toast.LENGTH_SHORT).show();
@@ -59,7 +60,7 @@ public class RecipeDetailFragment extends Fragment {
         }
 
         // Parse the recipe info from the bundle from MainListActivity
-        // Integer mRecipeId = recipe.get(0).getId();
+        //Integer mRecipeId = recipe.get(0).getId();
         String mRecipeName = recipe.get(0).getName();
         List<Ingredient> mIngredients = recipe.get(0).getIngredients();
         ArrayList<Step> mSteps = recipe.get(0).getSteps();
